@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.1//EN" "http://struts.apache.org/dtds/struts-2.1.dtd">
+<struts>
+<constant name="struts.enable.DynamicMethodInvocation" value="false" />
+<constant name="struts.multipart.saveDir" value="/tmp"/>
+	<package name="a" extends="struts-default">
+		<action name="check" class="controller.CheckLogin">
+		</action>
+		
+		<action name="login" class="controller.UserLogin" method="login">
+			<result name="success">/tree.jsp</result>
+		</action>
+		<action name="fishDataRecord" class="fishDataInput.FishRecord">
+			<result name="success">/dataRecord2fish.jsp</result>
+		</action>
+		<action name="queryFish" class="fishDataInput.QueryFish">
+			<result name="success">/myFishData.jsp</result>
+		</action>
+		<action name="reviseFish" class="fishDataInput.FishRecord" method="revise">
+			<result name="success">/revise2fish.jsp</result>
+		</action>
+		<action name="deleteData" class="fishDataInput.FishRecord" method="deleteFish">
+		</action>
+		
+		<action name="register" class="register.Register"  > <!-- 行动  -->
+    	<result name="error">/register.jsp</result>
+        <result name="success">/index.jsp</result>
+   		 </action>
+		<!-- 导入导出 -->
+	<action name="import" class="fileload.FileUploadAction">
+    	<result name="error">/importresult.jsp</result>
+    	<!-- <result name="input">/import.jsp</result> -->
+        <result name="success">/importresult.jsp</result>
+        <interceptor-ref name="defaultStack"></interceptor-ref>
+    </action>
+	<action name="export" class="fileload.FileDownloadAction" >
+    	<param name="inputpath">/textdownload/2.txt</param>
+    	<result name="success" type="stream">
+    		<param name="contentType">text/plain</param>
+    		<param name="inputName">inputStream</param>
+    		<param name="contentDisposition">attachment;filename="${downloadFileName}"</param>
+    	</result>
+    </action>
+    
+    <!-- tree action -->
+    <action name="QueryMonitSite" class="monitTree.QueryMonit" method="MonitSite">
+		</action>
+		<action name="AllMonit" class="monitTree.QueryMonit" method="GetNextMonit">
+		</action>
+		<action name="DeleteMonit" class="monitTree.QueryMonit" method="DeleteSelectMonit">
+		</action>
+		<action name="AddChild" class="monitTree.AddChildren" >
+		</action>
+		<action name="ShowMessage" class="monitTree.QueryMonit" method="ShowMessage" >
+		</action>
+		<action name="UpdateMonit" class="monitTree.AddChildren" method="UpdateData" >
+		</action>
+	</package>
+</struts>    

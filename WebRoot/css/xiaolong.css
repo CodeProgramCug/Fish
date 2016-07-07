@@ -1,0 +1,26 @@
+#selecttable{height:25px;width:200px;border-radius:5px;border-color:#8DEEEE;margin:0 60% 0 0;}
+
+.article input{height:20px;width:120px;border-radius:5px;border-color:#8DEEEE;}
+
+.article .contex3{height:100%;width:100%;overflow:scroll;display:none;}
+.article #Monit_Phy{display:block;}
+
+.article .context2{width:100%;height:20%;}
+.article .float-left{display:inline-block;height:100%;width:16.6%;float:left;line-height:3em;}
+.article .float-left span{float:right;}
+.article .float-left font{color:red;}
+
+.article .submit1{display:inline-block;height:35px;width:80px;margin-right:120px;padding:auto;}
+.article .submit1 input{width:92%;height:92%;}
+.article .submit1:hover input{width:100%;height:100%;}
+.article .submit2{display:inline-block;height:35px;width:130px;padding:auto;}
+.article .submit2 input{width:92%;height:92%;}
+.article .submit2:hover input{width:100%;height:100%;}
+
+.article .add-data{
+	height:90%;
+}
+.article .context5{width:90%;height:100%;overflow:scroll;}
+.context5 .float-left2{display:inline-block;height:100%;width:20%;float:left;line-height:3em;}
+.context5 .float-left2 span{float:right;}
+.context5 .float-left2 font{color:red;}
