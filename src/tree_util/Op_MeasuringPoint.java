@@ -12,7 +12,7 @@ import com.opensymphony.xwork2.ActionSupport;
 import db_tool.DBConnection;
 
 /**
- * 添加、更新	测点
+ * 添加、更新、删除	测点
  * */
 public class Op_MeasuringPoint extends ActionSupport {
 
