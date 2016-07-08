@@ -27,6 +27,7 @@ public class UserLogin extends ActionSupport{
 	public void setUsername(String username) {
 		this.username = username;
 	}
+	
 	//将用户以及用户权限保存到session中
 	public String login() throws IOException{
 		Map<String, Object> attribute=ActionContext.getContext().getSession();

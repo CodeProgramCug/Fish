@@ -36,7 +36,7 @@ public class DbBean {
 			user = "sa";
 			password ="123456";
 			url ="jdbc:sqlserver://localhost:1433;databaseName=POS_DB";
-			Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");;
+			Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
 			
 		} catch (Exception e) {
 			System.out.println("dbBean: init error!" + e.toString());
@@ -45,7 +45,6 @@ public class DbBean {
 	/**
 	 * init()
 	 */
-	
 	public Connection getConnection() {
 		return conn;
 	}
@@ -70,7 +69,11 @@ public class DbBean {
 	public void prepareStatement(String sql) throws SQLException {
 		prepstmt = conn.prepareStatement(sql);
 	}
-
+	
+	public PreparedStatement getPrepareStatement(String sql) throws SQLException {
+		prepstmt = conn.prepareStatement(sql);
+		return prepstmt;
+	}
 	/**
 	 * @function prepareStatement
 	 * @param sql
