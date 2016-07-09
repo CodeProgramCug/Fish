@@ -10,22 +10,26 @@ import org.apache.struts2.ServletActionContext;
 import com.opensymphony.xwork2.ActionSupport;
 
 import db_tool.DBConnection;
-import db_tool.DbBean;
 import db_tool.TimeFormat;
 
 /**
- * 添加、更新、删除	 断面
+ * 添加、更新、删除	卵样本
  * */
-public class Op_FractureSurface extends ActionSupport {
+public class Op_FishEggs extends ActionSupport {
 
 	private String flag;		//区分操作
 	
-	private final static String START = "SEC";				//主键 开头
+	private final static String START = "FSE";				//主键、照片 开头
 	
-	private String ID;			
-	private String Position;
-	private String Distance2Bank;
-	private String ID_MonitoringSite;		//外键
+	private static String PATH = "";					//照片在服务器上的路径("|"隔开)
+	
+	private String SampleID;
+	private String Period;
+	private String Diameter;
+	private String EMDiameter;
+	private String PigmentProp;
+	private String EmbryoProp;
+	private String ID_Catches;
 	
 	private PrintWriter writer = null;
 	
@@ -49,12 +53,15 @@ public class Op_FractureSurface extends ActionSupport {
 		}
 		return SUCCESS;
 	}
-
+	
 	private void update(){
-		String sql="";
-		sql += "update FractureSurface set Position='" + Position + "',Distance2Bank='"
-		+ Distance2Bank + "' where ID='" + ID + "' and ID_MonitoringSite='" 
-		+ ID_MonitoringSite + "'";
+		//获取照片路径
+		//PATH = START + 
+		
+		String update = "update FishEggs set Photo='" + PATH + "',Period='" + Period
+				+ "',Diameter='" + Diameter + "',EMDiameter='" + EMDiameter + "',PigmentProp='"
+				+ PigmentProp + "',EmbryoProp='" + EmbryoProp + "' where SampleID='" + SampleID
+				+ "' and ID_Catches='" + ID_Catches + "'";
 		
 		Statement statement = null;
 		try {
@@ -63,28 +70,31 @@ public class Op_FractureSurface extends ActionSupport {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
+		
 		try {
-			statement.executeUpdate(sql);
+			statement.executeUpdate(update);
 			writer.write("success");
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			writer.write("error");
-			System.out.println("--断面更新失败--");
+			System.out.println("--卵样本更新失败--");
 			e.printStackTrace();
 		} finally{
 			try {
 				db_connection.close(statement);
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
-				System.out.println("断面更新操作关闭失败");
+				System.out.println("卵样本更新操作关闭失败");
 				e.printStackTrace();
 			}
 		}
-		
 	}
 	
 	private void insert(){
-		String insert = "insert into FractureSurface values(?,?,?,?)";
+		//获取照片路径
+		//PATH = START +
+		
+		String insert = "insert into FishEggs values(?,?,?,?,?,?,?,?)";
 		String childID = START + TimeFormat.getNowTime();
 		
 		PreparedStatement preparedStatement = null;
@@ -94,36 +104,39 @@ public class Op_FractureSurface extends ActionSupport {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-		
 		try {
 			preparedStatement = db_connection.getPreparedStatement(insert);
 			preparedStatement.setString(1, childID);
-			preparedStatement.setString(2, Position);
-			preparedStatement.setString(3, Distance2Bank);
-			preparedStatement.setString(4, ID_MonitoringSite);
+			preparedStatement.setString(2, PATH);
+			preparedStatement.setString(3, Period);
+			preparedStatement.setString(4, Diameter);
+			preparedStatement.setString(5, EMDiameter);
+			preparedStatement.setString(6, PigmentProp);
+			preparedStatement.setString(7, EmbryoProp);
+			preparedStatement.setString(8, ID_Catches);
 			
 			preparedStatement.executeUpdate();
+			
 			writer.write(childID);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			writer.write("error");
-			System.out.println("--断面插入错误--");
+			System.out.println("--卵样本插入错误--");
 			e.printStackTrace();
 		}finally{
 			try {
 				db_connection.close(preparedStatement);
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
-				System.out.println("断面插入操作关闭失败");
+				System.out.println("卵样本插入操作关闭失败");
 				e.printStackTrace();
 			}
 		}
-		
 	}
 	
 	private void delete(){
-		String delete = "delete from FractureSurface where ID='" + ID 
-				+ "' and ID_MonitoringSite='" + ID_MonitoringSite + "'";
+		String delete = "delete from FishEggs where SampleID='" + SampleID
+				+ "' and ID_Catches='" + ID_Catches + "'";
 		
 		Statement statement = null;
 		try {
@@ -136,54 +149,57 @@ public class Op_FractureSurface extends ActionSupport {
 		try {
 			statement.executeUpdate(delete);
 			writer.write("success");
-			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			writer.write("error");
-			System.out.println("断面删除错误");
+			System.out.println("卵样本删除错误");
 			e.printStackTrace();
 		} finally{
 			try {
 				db_connection.close(statement);
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
-				System.out.println("断面删除操作关闭失败");
+				System.out.println("卵样本删除操作关闭失败");
 				e.printStackTrace();
 			}
 		}
-		
 	}
 	
-	public String getID() {
-		return ID;
+	public String getPeriod() {
+		return Period;
 	}
-
-	public void setID(String iD) {
-		ID = iD;
+	public void setPeriod(String period) {
+		Period = period;
 	}
-
-	public String getID_MonitoringSite() {
-		return ID_MonitoringSite;
+	public String getDiameter() {
+		return Diameter;
 	}
-
-	public void setID_MonitoringSite(String iD_MonitoringSite) {
-		ID_MonitoringSite = iD_MonitoringSite;
+	public void setDiameter(String diameter) {
+		Diameter = diameter;
 	}
-
-	public String getPosition() {
-		return Position;
+	public String getEMDiameter() {
+		return EMDiameter;
 	}
-
-	public void setPosition(String position) {
-		Position = position;
+	public void setEMDiameter(String eMDiameter) {
+		EMDiameter = eMDiameter;
 	}
-
-	public String getDistance2Bank() {
-		return Distance2Bank;
+	public String getPigmentProp() {
+		return PigmentProp;
 	}
-
-	public void setDistance2Bank(String distance2Bank) {
-		Distance2Bank = distance2Bank;
+	public void setPigmentProp(String pigmentProp) {
+		PigmentProp = pigmentProp;
+	}
+	public String getEmbryoProp() {
+		return EmbryoProp;
+	}
+	public void setEmbryoProp(String embryoProp) {
+		EmbryoProp = embryoProp;
+	}
+	public String getID_Catches() {
+		return ID_Catches;
+	}
+	public void setID_Catches(String iD_Catches) {
+		ID_Catches = iD_Catches;
 	}
 
 	public String getFlag() {
@@ -192,6 +208,14 @@ public class Op_FractureSurface extends ActionSupport {
 
 	public void setFlag(String flag) {
 		this.flag = flag;
+	}
+
+	public String getSampleID() {
+		return SampleID;
+	}
+
+	public void setSampleID(String sampleID) {
+		SampleID = sampleID;
 	}
 	
 }

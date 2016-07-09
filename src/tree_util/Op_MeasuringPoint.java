@@ -10,6 +10,7 @@ import org.apache.struts2.ServletActionContext;
 import com.opensymphony.xwork2.ActionSupport;
 
 import db_tool.DBConnection;
+import db_tool.TimeFormat;
 
 /**
  * 添加、更新、删除	测点
@@ -17,6 +18,8 @@ import db_tool.DBConnection;
 public class Op_MeasuringPoint extends ActionSupport {
 
 	private String flag;			//区分操作
+	
+	private final static String START = "PNT";				//主键 开头
 	
 	private String ID;
 	private String Longitude;
@@ -31,6 +34,7 @@ public class Op_MeasuringPoint extends ActionSupport {
 	public String execute() throws Exception {
 		// TODO Auto-generated method stub
 		writer = ServletActionContext.getResponse().getWriter();
+		db_connection = DBConnection.getInstance();
 		
 		if(flag.equals("insert")){
 			//更新操作
@@ -49,7 +53,6 @@ public class Op_MeasuringPoint extends ActionSupport {
 		String update = "update MeasuringPoint set Longitude='" + Longitude + "',Latitude='" + Latitude
 				+ "' where ID='" + ID + "' and ID_MeasuringLine='" + ID_MeasuringLine + "'";
 		
-		db_connection = new DBConnection();
 		Statement statement = null;
 		try {
 			statement = db_connection.getStatement();
@@ -79,9 +82,8 @@ public class Op_MeasuringPoint extends ActionSupport {
 	
 	private void insert(){
 		String insert = "insert into MeasuringPoint values(?,?,?,?)";
-		String childID = "PNT" + TimeFormat.getNowTime();
+		String childID = START + TimeFormat.getNowTime();
 		
-		db_connection = new DBConnection();
 		PreparedStatement preparedStatement = null;
 		try {
 			preparedStatement = db_connection.getPreparedStatement(insert);
@@ -113,7 +115,6 @@ public class Op_MeasuringPoint extends ActionSupport {
 		String delete = "delete from MeasuringPoint where ID='" + ID 
 				+ "' and ID_MeasuringLine='" + ID_MeasuringLine + "'";
 		
-		db_connection = new DBConnection();
 		Statement statement = null;
 		try {
 			statement = db_connection.getStatement();

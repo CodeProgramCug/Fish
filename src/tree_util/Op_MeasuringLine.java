@@ -11,6 +11,7 @@ import com.opensymphony.xwork2.ActionSupport;
 
 import db_tool.DBConnection;
 import db_tool.DbBean;
+import db_tool.TimeFormat;
 
 /**
  * 添加、更新、删除	 测线
@@ -18,6 +19,8 @@ import db_tool.DbBean;
 public class Op_MeasuringLine extends ActionSupport {
 
 	private String flag;		//区分操作
+	
+	private final static String START = "LIN";				//主键 开头
 	
 	private String ID;			
 	private String StartLongitude;
@@ -34,6 +37,7 @@ public class Op_MeasuringLine extends ActionSupport {
 	public String execute() throws Exception {
 		// TODO Auto-generated method stub
 		writer = ServletActionContext.getResponse().getWriter();
+		db_connection = DBConnection.getInstance();
 		
 		if(flag.equals("insert")){
 			//更新操作
@@ -55,7 +59,6 @@ public class Op_MeasuringLine extends ActionSupport {
 				+ "',EndLatitude='" + EndLatitude + "' where ID='" + ID 
 				+ "' and ID_FractureSurface='" + ID_FractureSurface + "'";
 		
-		db_connection = new DBConnection();
 		Statement statement = null;
 		try {
 			statement = db_connection.getStatement();
@@ -85,9 +88,8 @@ public class Op_MeasuringLine extends ActionSupport {
 	
 	private void insert(){
 		String insert = "insert into MeasuringLine values(?,?,?,?,?,?)";
-		String childID = "LIN" + TimeFormat.getNowTime();
+		String childID = START + TimeFormat.getNowTime();
 		
-		db_connection = new DBConnection();
 		PreparedStatement preparedStatement = null;
 		try {
 			preparedStatement = db_connection.getPreparedStatement(insert);
@@ -128,7 +130,6 @@ public class Op_MeasuringLine extends ActionSupport {
 		String delete = "delete from MeasuringLine where ID='" + ID 
 				+ "' and ID_FractureSurface='" + ID_FractureSurface + "'";
 		
-		db_connection = new DBConnection();
 		Statement statement = null;
 		try {
 			statement = db_connection.getStatement();

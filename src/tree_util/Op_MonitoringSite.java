@@ -10,7 +10,7 @@ import org.apache.struts2.ServletActionContext;
 import com.opensymphony.xwork2.ActionSupport;
 
 import db_tool.DBConnection;
-import db_tool.DbBean;
+import db_tool.TimeFormat;
 
 /**
  * 添加、更新、删除	 监测点
@@ -19,13 +19,16 @@ public class Op_MonitoringSite extends ActionSupport {
 
 	private String flag;		//区分操作
 	
+	private final static String START = "MON";				//主键、照片 开头
+	
+	private static String PATH = "";					//照片在服务器上的路径("|"隔开)
+	
 	private String InverstigationID;				
 	private String Institution;
 	private String Investigator;
 	private String InvestigationDate;
 	private String Site;
 	private String River;
-	private String Photo;
 	private String StartTime;
 	private String EndTime;
 	private String StartLongitude;
@@ -43,6 +46,7 @@ public class Op_MonitoringSite extends ActionSupport {
 	public String execute() throws Exception {
 		// TODO Auto-generated method stub
 		writer = ServletActionContext.getResponse().getWriter();
+		db_connection = DBConnection.getInstance();
 		
 		if(flag.equals("insert")){
 			//更新操作
@@ -58,13 +62,15 @@ public class Op_MonitoringSite extends ActionSupport {
 	}
 	
 	private void update(){
+		//获取照片路径
+		//PATH = START + 
+		
 		String sql = "";
 		sql += "update MonitoringSite set Institution='" + Institution + "',Investigator='" + Investigator + "',InvestigationDate='" + InvestigationDate + "',Site='";
-		sql += Site + "',River='" + River + "',Photo='" + Photo + "',StartTime='" + StartTime + "',EndTime='" + EndTime + "',StartLongitude='" + StartLongitude + "',StartLatitude='";
+		sql += Site + "',River='" + River + "',Photo='" + PATH + "',StartTime='" + StartTime + "',EndTime='" + EndTime + "',StartLongitude='" + StartLongitude + "',StartLatitude='";
 		sql += StartLatitude + "',EndLongitude='" + EndLongitude + "',EndLatitude='" + EndLatitude + "',Weather='" + Weather + "',Temperature='" + Temperature + "'";
 		sql += " where InverstigationID='" + InverstigationID + "'";
 		
-		db_connection = new DBConnection();
 		Statement statement = null;
 		try {
 			statement = db_connection.getStatement();
@@ -93,10 +99,12 @@ public class Op_MonitoringSite extends ActionSupport {
 	}
 	
 	private void insert(){
-		String insert = "insert into MonitoringSite values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
-		String childID = "MON" + TimeFormat.getNowTime();
+		//获取照片路径
+		//PATH = START + 
 		
-		db_connection = new DBConnection();
+		String insert = "insert into MonitoringSite values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+		String childID = START + TimeFormat.getNowTime();
+		
 		PreparedStatement preparedStatement = null;
 		try {
 			preparedStatement = db_connection.getPreparedStatement(insert);
@@ -112,7 +120,7 @@ public class Op_MonitoringSite extends ActionSupport {
 			preparedStatement.setString(4, InvestigationDate);
 			preparedStatement.setString(5, Site);
 			preparedStatement.setString(6, River);
-			preparedStatement.setString(7, Photo);
+			preparedStatement.setString(7, PATH);
 			preparedStatement.setString(8, StartTime);
 			preparedStatement.setString(9, EndTime);
 			preparedStatement.setString(10, StartLongitude);
@@ -145,7 +153,6 @@ public class Op_MonitoringSite extends ActionSupport {
 	private void delete(){
 		String delete = "delete from MonitoringSite where InverstigationID='" + InverstigationID + "'";
 		
-		db_connection = new DBConnection();
 		Statement statement = null;
 		try {
 			statement = db_connection.getStatement();
@@ -219,14 +226,6 @@ public class Op_MonitoringSite extends ActionSupport {
 
 	public void setRiver(String river) {
 		River = river;
-	}
-
-	public String getPhoto() {
-		return Photo;
-	}
-
-	public void setPhoto(String photo) {
-		Photo = photo;
 	}
 
 	public String getStartTime() {

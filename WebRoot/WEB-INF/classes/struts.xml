@@ -69,5 +69,13 @@
 		<action name="op_meapoi" class="tree_util.Op_MeasuringPoint"></action>
 		<!-- 采样水层 -->
 		<action name="op_watlay" class="tree_util.Op_WaterLayer"></action>
+		<!-- 网具-->
+		<action name="op_catools" class="tree_util.Op_CatchTools"></action>
+		<!-- 渔获物 -->
+		<action name="op_catch" class="tree_util.Op_Catches"></action>
+		<!-- 鱼样本 -->
+		<action name="op_fish" class="tree_util.Op_Fishes"></action>
+		<!-- 卵样本 -->
+		<action name="op_egg" class="tree_util.Op_FishEggs"></action>
 	</package>
 </struts>    

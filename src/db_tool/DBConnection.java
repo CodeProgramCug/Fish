@@ -11,6 +11,15 @@ import java.sql.Statement;
  * 数据库连接类
  * */
 public class DBConnection {
+	
+	private static DBConnection DB = null;
+	public static synchronized DBConnection  getInstance(){
+		if(DB == null){
+			DB = new DBConnection();
+		}
+		return DB;
+	}
+	
 	//数据库: SQL Server
 	//端口: 1433
 	//数据库名: POS_DB
@@ -23,7 +32,7 @@ public class DBConnection {
 	private Statement statement = null;
 	private PreparedStatement preparedStatement = null;
 	
-	public DBConnection(){
+	private  DBConnection(){
 		//加载SQL Server的JDBC的驱动 
 		try {
 			Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
@@ -62,33 +71,27 @@ public class DBConnection {
 	}
 	
 	/**
-	 * 关闭 Connection、Statement
-	 * @param statement
+	 * 关闭Statement
+	 * @param statement	自定义的Statement
 	 * */
 	public void close(Statement statement) throws SQLException{
 		if(statement != null){
 			statement.close();
 		}
-		if(this.connection != null){
-			this.connection.close();
-		}
 	}
 	
 	/**
-	 * 关闭 Connection、PreparedStatement
+	 * 关闭 PreparedStatement
 	 * @param preparedStatement  自定义的PreparedStatement
 	 * */
 	public void close(PreparedStatement preparedStatement) throws SQLException{
 		if(preparedStatement != null){
 			preparedStatement.close();
 		}
-		if(this.connection != null){
-			this.connection.close();
-		}
 	}
 	
 	/**
-	 * 关闭 Connection、Statement
+	 * 关闭ResultSet、Statement
 	 * @param resultSet 自定义的ResultSet
 	 * @param statement 自定义的Statement
 	 * */
@@ -99,13 +102,10 @@ public class DBConnection {
 		if(statement != null){
 			statement.close();
 		}
-		if(this.connection != null){
-			this.connection.close();
-		}
 	}
 	
 	/**
-	 * 关闭 Connection、PreparedStatement、ResultSet
+	 * 关闭 PreparedStatement、ResultSet
 	 * @param resultSet 自定义的ResultSet
 	 * @param preparedStatement 自定义的PreparedStatement
 	 * */
@@ -115,9 +115,6 @@ public class DBConnection {
 		}
 		if(preparedStatement != null){
 			preparedStatement.close();
-		}
-		if(this.connection != null){
-			this.connection.close();
 		}
 	}
 }

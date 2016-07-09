@@ -2,10 +2,12 @@ package test;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.List;
 
 import org.apache.ibatis.session.SqlSession;
 
+import db_tool.DBConnection;
 import db_tool.GetSqlSession;
 import db_tool.User;
 
