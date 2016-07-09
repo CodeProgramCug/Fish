@@ -22,28 +22,30 @@ public class QueryMonit extends ActionSupport {
 	public void setMonitID(String monitID) {
 		this.monitID = monitID;
 	}
-		public String MonitSite() throws IOException{
-			PrintWriter writer = ServletActionContext.getResponse().getWriter();
-			String result="";
-			DbBean ssd=new DbBean();
-			String sql="SELECT InverstigationID FROM MonitoringSite";
-			ResultSet rs=null;
-			try {
-				rs=ssd.executeQuery(sql);
-				while(rs.next()){
-					result+=rs.getString(1)+",";
-				}
-				result=result.substring(0, result.length()-1);
-				System.out.println("monitSite ID result:"+result);
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-				writer.write("error");
-				return null;
+	
+	//获取所有的根结点
+	public String MonitSite() throws IOException{
+		PrintWriter writer = ServletActionContext.getResponse().getWriter();
+		String result="";
+		DbBean ssd=new DbBean();
+		String sql="SELECT InverstigationID FROM MonitoringSite";
+		ResultSet rs=null;
+		try {
+			rs=ssd.executeQuery(sql);
+			while(rs.next()){
+				result+=rs.getString(1)+",";
 			}
-			writer.write(result);
+			result=result.substring(0, result.length()-1);
+			System.out.println("monitSite ID result:"+result);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			writer.write("error");
 			return null;
 		}
+		writer.write(result);
+		return null;
+	}
 		
 	public String GetNextMonit() throws IOException{
 		PrintWriter writer = ServletActionContext.getResponse().getWriter();
@@ -91,6 +93,7 @@ public class QueryMonit extends ActionSupport {
 		writer.write(result);
 		return null;
 	}
+	
 	public String DeleteSelectMonit() throws IOException{
 		PrintWriter writer = ServletActionContext.getResponse().getWriter();
 		String mID=monitID.substring(0,3);
@@ -130,6 +133,7 @@ public class QueryMonit extends ActionSupport {
 			writer.write("success");
 		return null;
 	}
+	
 	public String ShowMessage() throws IOException{
 		PrintWriter writer = ServletActionContext.getResponse().getWriter();
 		String mID=monitID.substring(0,3);
@@ -138,24 +142,57 @@ public class QueryMonit extends ActionSupport {
 		String sql="";
 		ResultSet rs=null;
 		try{
-		if(mID.equals("MON")){
-			sql+="select * from MonitoringSite where InverstigationID='"+monitID+"'";	
-		}else if(mID.equals("SEC")){
-			sql+="select * from FractureSurface where ID='"+monitID+"'";
-		}else if(mID.equals("LIN")){
-			sql+="select * from MeasuringLine where ID='"+monitID+"'";
-		}
-		rs=ssd.executeQuery(sql);
-		while(rs.next()){
-			for(int i=1;i<=rs.getMetaData().getColumnCount();i++)
-				result+=rs.getString(i)+",";
-		}
-		result=result.substring(0,result.length()-1);
-		writer.write(result);
-		}catch(Exception e){
-			writer.write("error");
-			System.out.println(e);
-		}
+			if(mID.equals("MON")){
+				//监测点
+				sql+="select * from MonitoringSite where InverstigationID='"+monitID+"'";	
+				
+			}else if(mID.equals("SEC")){
+				//断面
+				sql+="select * from FractureSurface where ID='"+monitID+"'";
+				
+			}else if(mID.equals("LIN")){
+				//测线
+				sql+="select * from MeasuringLine where ID='"+monitID+"'";
+				
+			}else if(mID.equals("PNT")){
+				//测点
+				sql+="select * from MeasuringPoint where ID='"+monitID+"'";
+				
+			}else if(mID.equals("WLE")){
+				//采样水层
+				sql+="select * from WaterLayer where ID='"+monitID+"'";
+				
+			}else if(mID.equals("NET")){
+				//网具
+				sql+="select * from CatchTools where SampleID='"+monitID+"'";
+				
+			}else if(mID.equals("CTH")){
+				//渔获物
+				sql+="select * from Catches where SampleID='"+monitID+"'";
+				
+			}else if(mID.equals("FSS")){
+				//鱼样本
+				sql+="select * from Fishes where SampleID='"+monitID+"'";
+				
+			}else if(mID.equals("FSE")){
+				//卵样本
+				sql+="select * from FishEggs where SampleID='"+monitID+"'";
+				
+			}
+			
+			rs=ssd.executeQuery(sql);
+			
+			while(rs.next()){
+				for(int i=1;i<=rs.getMetaData().getColumnCount();i++)
+					result+=rs.getString(i)+",";
+			}
+			
+			result=result.substring(0,result.length()-1);
+			writer.write(result);
+			}catch(Exception e){
+				writer.write("error");
+				System.out.println(e);
+			}
 		
 		return null;
 	}
