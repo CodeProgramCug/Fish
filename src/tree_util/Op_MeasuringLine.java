@@ -40,24 +40,20 @@ public class Op_MeasuringLine extends ActionSupport {
 		db_connection = DBConnection.getInstance();
 		
 		if(flag.equals("insert")){
-			//更新操作
-			update();
-		}else if(flag.equals("update")){
 			//插入操作
 			insert();
-		}else if(flag.equals("delete")){
-			//删除操作
-			delete();
+		}else if(flag.equals("update")){
+			//更新操作
+			update();
 		}
-		return SUCCESS;
+		return null;
 	}
 
 	private void update(){
 		String sql="";
 		sql+="update MeasuringLine set StartLongitude='" + StartLongitude
 				+ "',StartLatitude='" + StartLatitude + "',EndLongitude='" + EndLongitude
-				+ "',EndLatitude='" + EndLatitude + "' where ID='" + ID 
-				+ "' and ID_FractureSurface='" + ID_FractureSurface + "'";
+				+ "',EndLatitude='" + EndLatitude + "' where ID='" + ID + "'";
 		
 		Statement statement = null;
 		try {
@@ -120,35 +116,6 @@ public class Op_MeasuringLine extends ActionSupport {
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				System.out.println("测线插入操作关闭失败");
-				e.printStackTrace();
-			}
-		}
-		
-	}
-	
-	private void delete(){
-		String delete = "delete from MeasuringLine where ID='" + ID 
-				+ "' and ID_FractureSurface='" + ID_FractureSurface + "'";
-		
-		Statement statement = null;
-		try {
-			statement = db_connection.getStatement();
-		} catch (SQLException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-		try {
-			statement.executeUpdate(delete);
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			System.out.println("测线删除失败");
-			e.printStackTrace();
-		} finally{
-			try {
-				db_connection.close(statement);
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				System.out.println("测线删除操作关闭失败");
 				e.printStackTrace();
 			}
 		}

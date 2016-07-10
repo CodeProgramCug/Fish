@@ -41,23 +41,19 @@ public class Op_WaterLayer extends ActionSupport {
 		db_connection = DBConnection.getInstance();
 		
 		if(flag.equals("insert")){
-			//更新操作
-			update();
-		}else if(flag.equals("update")){
 			//插入操作
 			insert();
-		}else if(flag.equals("delete")){
-			//删除操作
-			delete();
+		}else if(flag.equals("update")){
+			//更新操作
+			update();
 		}
-		return SUCCESS;
+		return null;
 	}
 	 
 	private void update(){
 		String sql = "update WaterLayer set Layer='" + Layer + "',Depth='" + Depth
 				+ "',Temperature='" + Temperature + "',WaterLevel='" + WaterLevel
-				+ "',Velocity='" + Velocity + " where ID='" + ID 
-				+ "' and ID_MeasuringPoint='" + ID_MeasuringPoint + "'";
+				+ "',Velocity='" + Velocity + "' where ID='" + ID + "'";
 		
 		Statement statement = null;
 		try {
@@ -122,37 +118,6 @@ public class Op_WaterLayer extends ActionSupport {
 		}
 	}
 
-	private void delete(){
-		String delete = "delete from WaterLayer where ID='" + ID
-				+ "' and ID_MeasuringPoint='" + ID_MeasuringPoint + "'";
-		
-		Statement statement = null;
-		try {
-			statement = db_connection.getStatement();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		try {
-			statement.executeUpdate(delete);
-			writer.write("success");
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			writer.write("error");
-			System.out.println("采样水层删除失败");
-			e.printStackTrace();
-		} finally{
-			try {
-				db_connection.close(statement);
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				System.out.println("采样水层删除操作关闭失败");
-				e.printStackTrace();
-			}
-		}
-	}
-	
 	public String getLayer() {
 		return Layer;
 	}

@@ -94,7 +94,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 				<div class="float-left2" style="width:15%">
 					<span>Distance2Bank:&nbsp</span><br>
 				</div>
-				<div class="float-left2" style="width:25%;">
+				<div class="float-left2" style="width:30%;">
 					<input type="text" id="Distance2Bank2" > <font>&nbsp*</font></input>&nbsp<h4 class = "error" id = "Distance2Bank2Error"></h4><br>
 				</div>		
 				
@@ -123,25 +123,43 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			</div>
 		</div>
 		
+		<div id="add-Dot" class = "add-data">
+		        <div class="context5" >
+		        <div class="float-left2">
+					<span>Longitude:&nbsp</span><br>
+				</div>
+				<div class="float-left2" style ="width:25%;">
+					<input type="text" id="LongitudeDot"><font>&nbsp*</font></input>&nbsp<h4 class = "error" id="LongitudeDotError"></h4><br>
+				</div>
+				
+				<div class="float-left2" style = "width:15%;">
+					<span>Latitude:&nbsp</span><br>
+				</div>
+				<div class="float-left2" style = "width:25%">
+					<input type="text" id="LatitudeDot"><font>&nbsp*</font></input>&nbsp<h4 class = "error" id="LatitudeDotError"></h4><br>
+				</div>					
+		</div>
+		</div>
+		
 		<div id="add-water" class = "add-data">
 		    <div class="context5" >
 		      <div class="float-left2">
-		      	<span>编号:&nbsp</span><br>
-				<span>水层:&nbsp</span><br>
-				<span>深度:&nbsp</span>
+				<span>Layer:&nbsp</span><br>
+				<span>Depth:&nbsp</span><br>
+				<span>Temperature:&nbsp</span><br>
+				
 		      </div>
 		      <div class="float-left2" style ="width:25%;">
-					<input type="text" id="Number"><font>&nbsp*</font></input>&nbsp<h4 class = "error" id="NumberError"></h4><br>
 					<input type="text" id="waterFloor"><font>&nbsp*</font></input>&nbsp<h4 class = "error" id="waterFloorError"></h4><br>
-					<input type="text" id="Depath"><font>&nbsp*</font></input>&nbsp<h4 class = "error" id="DepathError"></h4><br>	
+					<input type="text" id="Depath"><font>&nbsp*</font></input>&nbsp<h4 class = "error" id="DepathError"></h4><br>
+					<input type="text" id="waterWarm"><font>&nbsp*</font></input>&nbsp<h4 class = "error" id="waterWarmError"></h4><br>
+						
 			  </div>
 			  <div class="float-left2" style = "width:15%;">
-					<span>水温:&nbsp</span><br>
-					<span>水位:&nbsp</span><br>
-					<span>流量:&nbsp</span><br>
+					<span>WaterLevel:&nbsp</span><br>
+					<span>Velocity:&nbsp</span><br>
 			   </div>
 			   <div class="float-left2" style = "width:25%">
-					<input type="text" id="waterWarm"><font>&nbsp*</font></input>&nbsp<h4 class = "error" id="waterWarmError"></h4><br>
 					<input type="text" id="waterHeight"><font>&nbsp*</font></input>&nbsp<h4 class = "error" id="waterHeightError"></h4><br>
 					<input type="text" id="waterFlow"><font>&nbsp*</font></input>&nbsp<h4 class = "error" id="waterFlowError"></h4><br>
 				</div>		

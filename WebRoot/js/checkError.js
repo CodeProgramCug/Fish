@@ -29,7 +29,7 @@ $(document).ready(function(){
 	var errorDistance2 = $("#Distance2Bank2Error")
 	inputPosition.focusout(function (){
 		var string = inputPosition.val();
-		if(string.length == 0 || string == "上层" || string == "中层" || string == "下层"){
+		if(string.length == 0 || string == "左岸" || string == "右岸" || string == "中间"){
 			errorPosition.text("");
 		}
 		else{
@@ -37,14 +37,13 @@ $(document).ready(function(){
 		}
 	});
 	
-	inputDistance2.mouseout(function (){
+	inputDistance2.focusout(function (){
 		var string = inputDistance2.val();
-		if(string.length == 0 || string == "上层" || string == "中层" || string == "下层"){
-			errorPosition.text("");
+		var pat=/^\d{0,10}/g;
+		if(!pat.test(string)){
+			errorDistance2.text("数据格式错误"); return;
 		}
-		else{
-			errorPosition.text("数据格式错误");
-		}
+		errorDistance2.text("");
 	});
 	var  StartLongitude3 = $("#StartLongitude3");
 	var StartLatitude3 = $("#StartLatitude3");
@@ -64,7 +63,7 @@ $(document).ready(function(){
 		check(StartLatitude3.val(),"StartLatitude3Error");
 	});
 	
-	var inputArray = ["StartLongitude1","StartLatitude1","EndLongitude1","EndLatitude1"];
+	var inputArray = ["StartLongitude1","StartLatitude1","EndLongitude1","EndLatitude1","LongitudeDot","LatitudeDot"];
 	for(var i = 0; i<inputArray.length;i++){
 		var tagName = "#"+inputArray[i];
 	     error = inputArray[i]+"Error";
@@ -120,18 +119,13 @@ $(document).ready(function(){
 		
 	});
 	
-	$("#Number").focusout(function(){
-		var str = $(this).val();
-		var error = $("#NumberError");
-		if(str.length == 0){error.text(""); return;}
-		if(str.length>15){error.text("输入数据超过15");return;}
-	});
+	
 	
 	$("#waterFloor").focusout(function(){
 		var str = $(this).val();
-		var error = $("#waterFloor");
+		var error = $("#waterFloorError");
 		if(str.length == 0){error.text(""); return;}
-		if(str.length>2){error.text("输入数据超过2");return;}
+		if(str=="上"||str=="中"||str=="下"){return;}else error.text("输入数据错误");
 	});
 
 	$("#Depath").focusout(function(){

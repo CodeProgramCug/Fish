@@ -25,7 +25,7 @@ public class Op_FractureSurface extends ActionSupport {
 	private String ID;			
 	private String Position;
 	private String Distance2Bank;
-	private String ID_MonitoringSite;		//外键
+	private String ID_MonitoringSite;
 	
 	private PrintWriter writer = null;
 	
@@ -38,23 +38,19 @@ public class Op_FractureSurface extends ActionSupport {
 		db_connection = DBConnection.getInstance();
 		
 		if(flag.equals("insert")){
-			//更新操作
-			update();
-		}else if(flag.equals("update")){
 			//插入操作
 			insert();
-		}else if(flag.equals("delete")){
-			//删除操作
-			delete();
+		}else if(flag.equals("update")){
+			//更新操作
+			update();
 		}
-		return SUCCESS;
+		return null;
 	}
 
 	private void update(){
 		String sql="";
 		sql += "update FractureSurface set Position='" + Position + "',Distance2Bank='"
-		+ Distance2Bank + "' where ID='" + ID + "' and ID_MonitoringSite='" 
-		+ ID_MonitoringSite + "'";
+		+ Distance2Bank + "' where ID='" + ID + "'";
 		
 		Statement statement = null;
 		try {
@@ -84,6 +80,9 @@ public class Op_FractureSurface extends ActionSupport {
 	}
 	
 	private void insert(){
+		
+		System.out.println("Position---"+Position);
+		System.out.println("Distance2Bank---"+Distance2Bank);
 		String insert = "insert into FractureSurface values(?,?,?,?)";
 		String childID = START + TimeFormat.getNowTime();
 		
@@ -121,53 +120,12 @@ public class Op_FractureSurface extends ActionSupport {
 		
 	}
 	
-	private void delete(){
-		String delete = "delete from FractureSurface where ID='" + ID 
-				+ "' and ID_MonitoringSite='" + ID_MonitoringSite + "'";
-		
-		Statement statement = null;
-		try {
-			statement = db_connection.getStatement();
-		} catch (SQLException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-		
-		try {
-			statement.executeUpdate(delete);
-			writer.write("success");
-			
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			writer.write("error");
-			System.out.println("断面删除错误");
-			e.printStackTrace();
-		} finally{
-			try {
-				db_connection.close(statement);
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				System.out.println("断面删除操作关闭失败");
-				e.printStackTrace();
-			}
-		}
-		
-	}
-	
 	public String getID() {
 		return ID;
 	}
 
 	public void setID(String iD) {
 		ID = iD;
-	}
-
-	public String getID_MonitoringSite() {
-		return ID_MonitoringSite;
-	}
-
-	public void setID_MonitoringSite(String iD_MonitoringSite) {
-		ID_MonitoringSite = iD_MonitoringSite;
 	}
 
 	public String getPosition() {
@@ -192,6 +150,14 @@ public class Op_FractureSurface extends ActionSupport {
 
 	public void setFlag(String flag) {
 		this.flag = flag;
+	}
+
+	public String getID_MonitoringSite() {
+		return ID_MonitoringSite;
+	}
+
+	public void setID_MonitoringSite(String iD_MonitoringSite) {
+		ID_MonitoringSite = iD_MonitoringSite;
 	}
 	
 }

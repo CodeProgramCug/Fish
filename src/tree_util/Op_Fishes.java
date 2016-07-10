@@ -50,7 +50,7 @@ public class Op_Fishes extends ActionSupport {
 			//删除操作
 			delete();
 		}
-		return SUCCESS;
+		return null;
 	}
 	
 	private void update(){

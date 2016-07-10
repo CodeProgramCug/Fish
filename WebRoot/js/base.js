@@ -41,7 +41,7 @@ $(document).ready(function(){
 			    for(var i = 0 ;i<MonitArr.length;i++){
 			    	var d = {};
 			    	console.log(MonitArr[i]);
-			    	d["text"] = MonitArr[i];
+			    	d["text"] ="监测点:"+MonitArr[i];
 			    	d["id"] = i.toString();
 			    	d["state"] = "open";
 			    	initTree[i] = d;
@@ -81,7 +81,20 @@ $(document).ready(function(){
 	//被选中的节点编号
 	selected =  data.selected;
 	var selnode=data.instance.get_node(selected);
-	var  text = tree.jstree().get_text(selected);
+	var  text1 = tree.jstree().get_text(selected);
+	var text;
+	if(text1.substring(0,3)== "监测点"){
+	  text = text1.substring(4,text1.length);
+	}
+    else if(text1.substring(0,2)=="断面"||text1.substring(0,2)=="测线"||text1.substring(0,2)=="测点"){
+     	text = text1.substring(3,text1.length);
+	}
+	else if(text1.substring(0,4)=="采样水层"){
+     	text = text1.substring(5,text1.length);
+	}else{
+		text = text1;
+	}
+	
 	if(text==false)
 	{
 		text = "无";
@@ -98,10 +111,15 @@ $(document).ready(function(){
 		$("#add-feature").hide();
 		$("#add-child-node").html("<span class='glyphicon glyphicon-plus'></span>&nbsp"+"添加测线");
 		$("#add-child-node1").show();
-	}else{
+	}else if(text.substring(0,3)=="LIN"){
 		$("#add-child-node1").hide();
 		$("#add-feature").hide();
-		$("#add-child-node").html("<span class='glyphicon glyphicon-plus'></span>&nbsp"+"添加子节点");
+		$("#add-child-node").html("<span class='glyphicon glyphicon-plus'></span>&nbsp"+"添加测点");
+	}
+	else if(text.substring(0,3)=="PNT"){
+		$("#add-child-node1").hide();
+		$("#add-feature").hide();
+		$("#add-child-node").html("<span class='glyphicon glyphicon-plus'></span>&nbsp"+"添加采样水层");
 	}
 	$("#node-text").html("已选中：<small><i>"+text+"</i></small>");
 	
@@ -113,7 +131,7 @@ $(document).ready(function(){
 			  $("#add-monitsite input").each(function(){
 				  $(this).val("");
 			  });
-			  
+				beforechange=selected;
 			  return;
 		  }else {
 			  var MonitArr=[];
@@ -125,6 +143,7 @@ $(document).ready(function(){
 			  async:true,
 			  success:function(result){
 				  MonitArr=result.split(',');
+
 				  if(text.substring(0, 3)=="MON"){
 					  $("#add-surface input").each(function(){
 						  $(this).val("");	  
@@ -136,10 +155,11 @@ $(document).ready(function(){
 					  $("#add-surface").css({"display":"none"});
 					  $("#add-line").css({"display":"none"});
 					  $("#add-water").css({"display":"none"});
+					  $("#add-Dot").css({"display":"none"});
 					  $("#add-child-sub").css({"display":"none"});
 					
 				  }else if(text.substring(0, 3)=="SEC"){
-					  $("#add-line input").each(function(){
+					  $("#add-surface input").each(function(){
 						  $(this).val("");	  
 					  });
 					  $("#add-surface input").each(function(i,n){
@@ -148,9 +168,13 @@ $(document).ready(function(){
 					  $("#add-monitsite").css({"display":"none"});
 					  $("#add-surface").css({"display":"block"});
 					  $("#add-line").css({"display":"none"});
+					  $("#add-Dot").css({"display":"none"});
 					  $("#add-water").css({"display":"none"});
 					  $("#add-child-sub").css({"display":"none"});
 				  }else if(text.substring(0, 3)=="LIN"){
+					  $("#add-line input").each(function(){
+						  $(this).val("");	  
+					  });
 					  $("#add-line input").each(function(i,n){
 						  $(this).val(MonitArr[i+1]);
 						  
@@ -158,19 +182,42 @@ $(document).ready(function(){
 					  $("#add-monitsite").css({"display":"none"});
 					  $("#add-surface").css({"display":"none"});
 					  $("#add-line").css({"display":"block"});
+					  $("#add-Dot").css({"display":"none"});
 					  $("#add-water").css({"display":"none"});
 					  $("#add-child-sub").css({"display":"none"});
-				  }else{
+				  }else if(text.substring(0,3)=="PNT"){
+					  console.log("text="+text+"--aaaaaaaaaaaaaaaaa");
 					//  alert("未知错误");
-					  $("#add-water input").each(function(i,n){
+					  $("#add-Dot input").each(function(){
+						  $(this).val("");	  
+					  });
+					  $("#add-Dot input").each(function(i,n){
 						  $(this).val(MonitArr[i+1]);
 						  
 					  });
 					  $("#add-monitsite").css({"display":"none"});
 					  $("#add-surface").css({"display":"none"});
 					  $("#add-line").css({"display":"none"});
+					  $("#add-Dot").css({"display":"block"});
+					  $("#add-water").css({"display":"none"});
+					  $("#add-child-sub").css({"display":"none"});
+				  }
+				  else{
+					  $("#add-water input").each(function(){
+						  $(this).val("");	  
+					  });
+					  $("#add-water input").each(function(i,n){
+						  console.log(MonitArr[i+1]);
+						  $(this).val(MonitArr[i+1]);
+						  
+					  });
+					  $("#add-monitsite").css({"display":"none"});
+					  $("#add-surface").css({"display":"none"});
+					  $("#add-line").css({"display":"none"});
+					  $("#add-Dot").css({"display":"none"});
 					  $("#add-water").css({"display":"block"});
 					  $("#add-child-sub").css({"display":"none"});
+					  
 				  }
 			  }
 		  });
@@ -178,20 +225,20 @@ $(document).ready(function(){
 		}
 		 //修改监测信息 
 		  $("#update-data").unbind("click").bind("click",function(){
-			  if(text.substring(0,3)=="MON"){
+			  if(text.substring(0,3)=="MON"){								//修改监测点
 				  $.ajax({
 				   	  type:"post",
 					  async:true,
-					  url:"UpdateMonit.action",
+					  url:"op_monsite.action",
 					  data:{
-						  "addType":"1",
-						  "fatherText":text,
+						  "flag":"update",
+						  "InverstigationID":text,							//主键
 						  "Institution":$("#Institution1").val(),
 						  "Investigator":$("#Investigator1").val(),
 						  "InvestigationDate":$("#InvestigationDate1").val(),
 						  "Site":$("#Site1").val(),
 						  "River":$("#River1").val(),
-						  "Photo":$("#Photo1").val(),
+						  //"Photo":$("#Photo1").val(),
 						  "StartTime":$("#StartTime1").val(),
 						  "EndTime":$("#EndTime1").val(),
 						  "StartLongitude":$("#StartLongitude1").val(),
@@ -213,14 +260,14 @@ $(document).ready(function(){
 						  }
 					  }
 			   });
-			  }else if(text.substring(0,3)=="SEC"){
+			  }else if(text.substring(0,3)=="SEC"){					//修改断面
 				  $.ajax({
 				   	  type:"post",
 					  async:true,
-					  url:"UpdateMonit.action",
+					  url:"op_frasur.action",
 					  data:{
-						  "addType":"2",
-						  "fatherText":text,
+						  "flag":"update",
+						  "ID":text,								//主键
 						  "Position":$("#Position2").val(),
 						  "Distance2Bank":$("#Distance2Bank2").val()
 					  },
@@ -236,14 +283,14 @@ $(document).ready(function(){
 						  }
 					  }
 			   });
-			  }else if(text.substring(0,3)=="LIN"){
+			  }else if(text.substring(0,3)=="LIN"){				//修改测线
 				  $.ajax({
 				   	  type:"post",
 					  async:true,
-					  url:"UpdateMonit.action",
+					  url:"op_mealin.action",
 					  data:{
-						  "addType":"3",
-						  "fatherText":text,
+						  "flag":"update",
+						  "ID":text,						//主键
 						  "StartLongitude":$("#StartLongitude3").val(),
 						  "StartLatitude":$("#StartLatitude3").val(),
 						  "EndLongitude":$("#EndLongitude3").val(),
@@ -261,21 +308,45 @@ $(document).ready(function(){
 						  } 
 					  }
 			   });
-			  }else{
-				  
+			
+			  }else if(text.substring(0,3)=="PNT"){				//修改测点
 				  $.ajax({
 				   	  type:"post",
 					  async:true,
-					  url:"UpdateMonit.action",
+					  url:"op_meapoi.action",
 					  data:{
-						  "addType":"4",
-						  "fatherText":text,
-						  "Number":$("#Number").val(),
-						  "waterFloor":$("#waterFloor").val(),
-						  "Depath":$("#Depath").val(),
-						  "waterWarm":$("#waterWarm").val(),
-						  "waterHeight":$("#waterHeight").val(),
-						  "waterFlow":$("#waterFlow").val()
+						  "flag":"update",
+						  "ID":text,							//主键
+						  "Longitude":$("#LongitudeDot").val(),
+						  "Latitude":$("#LatitudeDot").val(),
+					  },
+					  success:function(result){
+						  if(result=="error"){
+							  alert("修改失败！");
+						  }else{
+							  $("#input-place").css({"display":"none"});
+							  alert("修改成功！");
+							  $("#add-line input").each(function(){
+								  $(this).val("");
+							  });
+						  } 
+					  }
+			   });
+			  }
+			  else{
+				  $.ajax({									//修改采样水层
+				   	  type:"post",
+					  async:true,
+					  url:"op_watlay.action",
+					  data:{
+						  "flag":"update",
+						  "ID":text,						//主键
+						  //"Number":$("#Number").val(),
+						  "Layer":$("#waterFloor").val(),
+						  "Depth":$("#Depath").val(),
+						  "Temperature":$("#waterWarm").val(),
+						  "WaterLevel":$("#waterHeight").val(),
+						  "Velocity":$("#waterFlow").val()
 					  },
 					  success:function(result){
 						  if(result=="error"){
@@ -302,7 +373,10 @@ $(document).ready(function(){
 	
 	
     var test = tree.jstree().get_json(); 
-	var  string = JSON.stringify(test);
+
+	
+	//var  string = JSON.stringify(test);
+	
 	//alert("test:"+test+"--string:"+string)
 	//此处发送AJAX数据到数据库
 	/*$.post("",{data:string},function(){
@@ -318,6 +392,7 @@ $(document).ready(function(){
 		if(!data.instance.is_leaf(selnode)) return;
 			
 		  if(selected=='jh'){
+			  $(this).empty();
 			  $.ajax({
 				  type:"get",
 				  async:true,
@@ -325,7 +400,9 @@ $(document).ready(function(){
 				  success:function(result){
 					  MonitArr=result.split(',');
 					  for(var ix = 0;ix<MonitArr.length;ix ++){
-							tree.jstree().create_node(selected,MonitArr[ix],"last");	
+							tree.jstree().create_node(selected,"监测点:"+MonitArr[ix],"last");	
+						//	tree.jstree().create_node(selected,MonitArr[ix],"last");	
+
 						}
 					  tree.jstree().open_node(selected);
 				  }
@@ -338,18 +415,20 @@ $(document).ready(function(){
 			  async:true,
 			  url:"AllMonit.action?monitID="+text,
 			  success:function(result){
-				  if(result=="01"){
-					  alert("往后索引有待开发！");
-					  return;
-				  }else if(result=="00"){
+				  if(result=="00"){
 					  alert("发生错误，请稍后再试！")
 					  return;
 				  }else if(result==""||result==null){
 					  alert("往后已无索引！");
 				  }else{
-				 MonitArr=result.split(',');
+				  MonitArr=result.split(',');
+				  var str;
+				  if(text.substring(0,3)=="MON") str="断面:";
+				  else if(text.substring(0,3)=="SEC") str="测线:";
+				  else if(text.substring(0,3)=="LIN") str="测点:";
+				  else if(text.substring(0,3)=="PNT") str="采样水层:";
 				  for(var ix = 0;ix<MonitArr.length;ix ++){
-						tree.jstree().create_node(selected,MonitArr[ix],"last");	
+						tree.jstree().create_node(selected,str+MonitArr[ix],"last");	
 					}
 				  tree.jstree().open_node(selected);
 				  }
@@ -366,34 +445,69 @@ $(document).ready(function(){
 	  $("#rename-place").css({"display":"none"});
 	  $("#input-place").css({"display":"block"});
 	  $("#update-data").css({"display":"none"});
-	  var  text = tree.jstree().get_text(selected);
+	  var  text1 = tree.jstree().get_text(selected);
+	  var text;
+	  if(text1.substring(0,3)== "监测点"){
+		  text = text1.substring(4,text1.length);
+		}
+	    else if(text1.substring(0,2)=="断面"||text1.substring(0,2)=="测线"||text1.substring(0,2)=="测点"){
+	     	text = text1.substring(3,text1.length);
+		}
+		else if(text1.substring(0,4)=="采样水层"){
+	     	text = text1.substring(5,text1.length);
+		}
 	  if(selected=="jh"){
 		  $("#add-monitsite").css({"display":"block"});
 		  $("#add-surface").css({"display":"none"});
 		  $("#add-line").css({"display":"none"});
+		  $("#add-Dot").css({"display":"none"});
 		  $("#add-water").css({"display":"none"});
 		  $("#add-child-sub").css({"display":"block"});
+		  $("#add-monitsite input").each(function(){
+			  $(this).val("");	  
+		  });
 	  }else if(text.substring(0,3)=="MON"){
 		  $("#add-monitsite").css({"display":"none"});
 		  $("#add-surface").css({"display":"block"});
 		  $("#add-line").css({"display":"none"});
+		  $("#add-Dot").css({"display":"none"});
 		  $("#add-water").css({"display":"none"});
 		  $("#add-child-sub").css({"display":"block"});
+		  $("#add-surface input").each(function(){
+			  $(this).val("");	  
+		  });
 	  }else if(text.substring(0,3)=="SEC"){
 		  $("#add-monitsite").css({"display":"none"});
 		  $("#add-surface").css({"display":"none"});
 		  $("#add-line").css({"display":"block"});
+		  $("#add-Dot").css({"display":"none"});
 		  $("#add-water").css({"display":"none"});
 		  $("#add-child-sub").css({"display":"block"});
+		  $("#add-line input").each(function(){
+			  $(this).val("");	  
+		  });
 	  }else if(text.substring(0,3)=="LIN"){
 		  $("#add-monitsite").css({"display":"none"});
 		  $("#add-surface").css({"display":"none"});
 		  $("#add-line").css({"display":"none"});
+		  $("#add-Dot").css({"display":"block"});
+		  $("#add-water").css({"display":"none"});
+		  $("#add-child-sub").css({"display":"block"}); //增加节点的时候的确定按钮
+		  $("#add-Dot input").each(function(){
+			  $(this).val("");	  
+		  });
+	  } else if(text.substring(0,3)=="PNT"){
+		  $("#add-monitsite").css({"display":"none"});
+		  $("#add-surface").css({"display":"none"});
+		  $("#add-line").css({"display":"none"});
+		  $("#add-Dot").css({"display":"none"});
 		  $("#add-water").css({"display":"block"});
 		  $("#add-child-sub").css({"display":"block"}); //增加节点的时候的确定按钮
+		  $("#add-water input").each(function(){
+			  $(this).val("");	  
+		  });
 	  }
-	  //增加监测点
-	   $("#add-child-sub").unbind("click").bind("click",function(){
+	   $("#add-child-sub").unbind("click").bind("click",function(){		//增加监测点
 		  if(selected=="jh"){
 			  $.ajax({
 			   	  type:"post",
@@ -421,7 +535,8 @@ $(document).ready(function(){
 					  if(result=="error"){
 						  alert("添加失败！");
 					  }else{
-						  tree.jstree().create_node(selected,result,"last");
+						
+						  tree.jstree().create_node(selected,"监测点:"+result,"last");
 						  tree.jstree().open_node(selected);
 						  $("#input-place").css({"display":"none"});
 						  alert("添加成功！");
@@ -432,14 +547,14 @@ $(document).ready(function(){
 					  }
 				  }
 		   });
-		  }else if(text.substring(0,3)=="MON"){
+		  }else if(text.substring(0,3)=="MON"){					//添加断面
 			  $.ajax({
 			   	  type:"post",
 				  async:true,
-				  url:"AddChild.action",
+				  url:"op_frasur.action",
 				  data:{
-					  "addType":"2",
-					  "fatherText":text,
+					  "flag":"insert",
+					  "ID_MonitoringSite":text,					//外键
 					  "Position":$("#Position2").val(),
 					  "Distance2Bank":$("#Distance2Bank2").val()
 				  },
@@ -447,7 +562,7 @@ $(document).ready(function(){
 					  if(result=="error"){
 						  alert("添加失败！");
 					  }else{
-						  tree.jstree().create_node(selected,result,"last");
+						  tree.jstree().create_node(selected,"断面:"+result,"last");
 						  tree.jstree().open_node(selected);
 						  $("#input-place").css({"display":"none"});
 						  alert("添加成功！");
@@ -458,14 +573,14 @@ $(document).ready(function(){
 					  }
 				  }
 		   });
-		  }else if(text.substring(0,3)=="SEC"){
+		  }else if(text.substring(0,3)=="SEC"){				//添加测线
 			  $.ajax({
 			   	  type:"post",
 				  async:true,
-				  url:"AddChild.action",
+				  url:"op_mealin.action",
 				  data:{
-					  "addType":"3",
-					  "fatherText":text,
+					  "flag":"insert",
+					  "ID_FractureSurface":text,				//外键
 					  "StartLongitude":$("#StartLongitude3").val(),
 					  "StartLatitude":$("#StartLatitude3").val(),
 					  "EndLongitude":$("#EndLongitude3").val(),
@@ -475,7 +590,7 @@ $(document).ready(function(){
 					  if(result=="error"){
 						  alert("添加失败！");
 					  }else{
-						  tree.jstree().create_node(selected,result,"last");
+						  tree.jstree().create_node(selected,"测线:"+result,"last");
 						  tree.jstree().open_node(selected);
 						  $("#input-place").css({"display":"none"});
 						  alert("添加成功！");
@@ -486,26 +601,51 @@ $(document).ready(function(){
 					  } 
 				  }
 		   });
-		  }else if(text.substring(0,3)=="LIN"){
+		  }else if(text.substring(0,3)=="LIN"){				//添加测点
 			  $.ajax({
 			   	  type:"post",
 				  async:true,
-				  url:"AddChild.action",
+				  url:"op_meapoi.action",
 				  data:{
-					  "addType":"4",
-					  "fatherText":text,
-					  "Number":$("#Number").val(),
-					  "waterFloor":$("#waterFloor").val(),
-					  "Depath":$("#Depath").val(),
-					  "waterWarm":$("#waterWarm").val(),
-					  "waterHeight":$("#waterHeight").val(),
-					  "waterFlow":$("#waterFlow").val()
+					  "flag":"insert",
+					  "ID_MeasuringLine":text,				//外键
+					  "Longitude":$("#LongitudeDot").val(),
+					  "Latitude":$("#LatitudeDot").val(),
 				  },
 				  success:function(result){
 					  if(result=="error"){
 						  alert("添加失败！");
 					  }else{
-						  tree.jstree().create_node(selected,result,"last");
+						  tree.jstree().create_node(selected,"测点:"+result,"last");
+						  $("#input-place").css({"display":"none"});
+						  alert("添加成功！");
+						  $("#add-line input").each(function(){
+							  $(this).val("");
+						  });
+					  } 
+				  }
+		   });
+			  
+		  }else {
+			  $.ajax({								//添加采样水层
+			   	  type:"post",
+				  async:true,
+				  url:"op_watlay.action",
+				  data:{
+					  "flag":"insert",
+					  "ID_MeasuringPoint":text,				//外键
+					  //"Number":$("#Number").val(),
+					  "Layer":$("#waterFloor").val(),
+					  "Depth":$("#Depath").val(),
+					  "Temperature":$("#waterWarm").val(),
+					  "WaterLevel":$("#waterHeight").val(),
+					  "Velocity":$("#waterFlow").val()
+				  },
+				  success:function(result){
+					  if(result=="error"){
+						  alert("添加失败！");
+					  }else{
+						  tree.jstree().create_node(selected,"采样水层:"+result,"last");
 						  tree.jstree().open_node(selected);
 						  $("#input-place").css({"display":"none"});
 						  alert("添加成功！");
@@ -533,27 +673,39 @@ $(document).ready(function(){
 		  $("#add-monitsite").css({"display":"block"});
 		  $("#add-surface").css({"display":"none"});
 		  $("#add-feature").css({"display":"none"});
+		  $("#add-Dot").css({"display":"none"});
 		  $("#add-water").css({"display":"none"});
 		  $("#add-child-sub").css({"display":"block"});
 	  }else if(text.substring(0,3)=="MON"){
 		  $("#add-monitsite").css({"display":"none"});
 		  $("#add-surface").css({"display":"block"});
 		  $("#add-feature").css({"display":"none"});
+		  $("#add-Dot").css({"display":"none"});
 		  $("#add-water").css({"display":"none"});
 		  $("#add-child-sub").css({"display":"block"});
 	  }else if(text.substring(0,3)=="SEC"){
 		  $("#add-monitsite").css({"display":"none"});
 		  $("#add-surface").css({"display":"none"});
 		  $("#add-feature").css({"display":"block"});
+		  $("#add-Dot").css({"display":"none"});
 		  $("#add-water").css({"display":"none"});
 		  $("#add-child-sub").css({"display":"block"});
 	  }else if(text.substring(0,3)=="LIN"){
 		  $("#add-monitsite").css({"display":"none"});
 		  $("#add-surface").css({"display":"none"});
 		  $("#add-feature").css({"display":"none"});
+		  $("#add-Dot").css({"display":"block"});
+		  $("#add-water").css({"display":"none"});
+		  $("#add-child-sub").css({"display":"block"});
+	  }else if(text.substring(0,3)=="PNT"){
+		  $("#add-monitsite").css({"display":"none"});
+		  $("#add-surface").css({"display":"none"});
+		  $("#add-feature").css({"display":"none"});
+		  $("#add-Dot").css({"display":"none"});
 		  $("#add-water").css({"display":"block"});
 		  $("#add-child-sub").css({"display":"block"});
 	  }
+	  
 	   $("#add-child-sub").unbind("click").bind("click",function(){
 		   $.ajax({
 			   	  type:"post",
@@ -615,7 +767,9 @@ $(document).ready(function(){
 	  if(confirm("您确定删除该条数据吗？")){
 	  $("#input-place").css({"display":"none"});
 	  $("#rename-place").css({"display":"none"});
-	  var  text = tree.jstree().get_text(selected);
+	  var  text1 = tree.jstree().get_text(selected);
+	  var  mon = text1.split(':');
+	  var text = mon[1];
 	   $.ajax({
 		   	  type:"get",
 			  async:true,

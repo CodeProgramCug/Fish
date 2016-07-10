@@ -3,7 +3,7 @@
 <struts>
 <constant name="struts.enable.DynamicMethodInvocation" value="false" />
 <constant name="struts.multipart.saveDir" value="/tmp"/>
-	<package name="default" extends="struts-default">
+	<package name="a" extends="struts-default">
 		<action name="check" class="controller.CheckLogin"></action>
 		
 		<action name="login" class="controller.UserLogin" method="login">
@@ -55,14 +55,14 @@
 		<!-- 删除节点 -->
 		<action name="DeleteMonit" class="monitTree.QueryMonit" method="DeleteSelectMonit"></action>
 		
-		<!-- 添加节点记录	此action已移至各java文件实现 -->
-		<action name="AddChild" class="monitTree.AddChildren" ></action>
+		<!-- 添加节点记录	此action已移至各java文件实现,合并时删除 -->
+		<!-- <action name="AddChild" class="monitTree.AddChildren" ></action> -->
 		
 		<!-- 显示每一个节点具体字段信息 -->
 		<action name="ShowMessage" class="monitTree.QueryMonit" method="ShowMessage" ></action>
 		
-		<!-- 更新节点信息	此action已移至各java文件实现 -->
-		<action name="UpdateMonit" class="monitTree.AddChildren" method="UpdateData" ></action>
+		<!-- 更新节点信息	此action已移至各java文件实现,合并时删除 -->
+		<!-- <action name="UpdateMonit" class="monitTree.AddChildren" method="UpdateData" ></action>-->
 		
 		<!-- 监测点 -->
 		<action name="op_monsite" class="tree_util.Op_MonitoringSite"></action>

@@ -54,9 +54,6 @@ public class Op_MonitoringSite extends ActionSupport {
 		}else if(flag.equals("update")){
 			//更新操作
 			update();
-		}else if(flag.equals("delete")){
-			//删除操作
-			delete();
 		}
 		return null;
 	}
@@ -148,36 +145,6 @@ public class Op_MonitoringSite extends ActionSupport {
 			}
 		}
 		
-	}
-
-	private void delete(){
-		String delete = "delete from MonitoringSite where InverstigationID='" + InverstigationID + "'";
-		
-		Statement statement = null;
-		try {
-			statement = db_connection.getStatement();
-		} catch (SQLException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-		
-		try {
-			statement.executeUpdate(delete);
-			writer.write("success");
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			writer.write("error");
-			System.out.println("监测点删除错误");
-			e.printStackTrace();
-		} finally{
-			try {
-				db_connection.close(statement);
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				System.out.println("监测点删除操作关闭失败");
-				e.printStackTrace();
-			}
-		}
 	}
 
 	public String getInverstigationID() {
