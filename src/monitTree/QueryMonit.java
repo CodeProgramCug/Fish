@@ -4,18 +4,19 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.sql.Statement;
 
 import org.apache.struts2.ServletActionContext;
 
 import com.opensymphony.xwork2.ActionSupport;
 
+import db_tool.DBConnection;
 import db_tool.DbBean;
 
 public class QueryMonit extends ActionSupport {
 	private String monitID;
-		public String getMonitID() {
+	
+	public String getMonitID() {
 		return monitID;
 	}
 
@@ -23,7 +24,7 @@ public class QueryMonit extends ActionSupport {
 		this.monitID = monitID;
 	}
 	
-	//获取所有的根结点
+	//获取所有的监测点
 	public String MonitSite() throws IOException{
 		PrintWriter writer = ServletActionContext.getResponse().getWriter();
 		String result="";
@@ -32,9 +33,11 @@ public class QueryMonit extends ActionSupport {
 		ResultSet rs=null;
 		try {
 			rs=ssd.executeQuery(sql);
+			
 			while(rs.next()){
 				result+=rs.getString(1)+",";
 			}
+			
 			result=result.substring(0, result.length()-1);
 			System.out.println("monitSite ID result:"+result);
 		} catch (SQLException e) {
@@ -43,6 +46,7 @@ public class QueryMonit extends ActionSupport {
 			writer.write("error");
 			return null;
 		}
+		
 		writer.write(result);
 		return null;
 	}
@@ -56,45 +60,51 @@ public class QueryMonit extends ActionSupport {
 		ResultSet rs=null;
 		System.out.println("monitID:"+monitID);
 		System.out.println("monitName:"+mID);
+		
 		try{
-		if(mID.equals("MON")){
-			sql+="select ID FROM FractureSurface where ID_MonitoringSite = '"+monitID+"'";
-			rs=ssd.executeQuery(sql);
-			while(rs.next()){
-				result+=rs.getString(1)+",";
-			}
-			//result=result.substring(0, result.length()-1);
-		}else if(mID.equals("SEC")){
-			sql+="select ID FROM MeasuringLine where ID_FractureSurface = '"+monitID+"'";
-			rs=ssd.executeQuery(sql);
-			while(rs.next()){
-				result+=rs.getString(1)+",";
-			}
-			//result=result.substring(0, result.length()-1);
+			if(mID.equals("MON")){
+				sql+="select ID FROM FractureSurface where ID_MonitoringSite = '"+monitID+"'";
+				rs=ssd.executeQuery(sql);
+				
+				while(rs.next()){
+					result+=rs.getString(1)+",";
+				}
+				//result=result.substring(0, result.length()-1);
+			}else if(mID.equals("SEC")){
+				sql+="select ID FROM MeasuringLine where ID_FractureSurface = '"+monitID+"'";
+				rs=ssd.executeQuery(sql);
+				
+				while(rs.next()){
+					result+=rs.getString(1)+",";
+				}
+				//result=result.substring(0, result.length()-1);
 			
-		}else if(mID.equals("LIN")){
-			result+="01";
-		}else if(monitID.equals("jjhh")){
-			sql+="select InverstigationID from MonitoringSite";
-			rs=ssd.executeQuery(sql);
-			while(rs.next()){
-				result+=rs.getString(1)+",";
+			}else if(mID.equals("LIN")){
+				result+="01";
+			}else if(monitID.equals("jjhh")){
+				sql+="select InverstigationID from MonitoringSite";
+				rs=ssd.executeQuery(sql);
+				while(rs.next()){
+					result+=rs.getString(1)+",";
+				}
 			}
-		}
 		
 		}catch(Exception e){
 			result+="00";
 			writer.write(result);
 			return null;
 		}
+		
 		if(result!=""&&!result.equals("01")&&!result.equals("00")){
 			result=result.substring(0, result.length()-1);
 		}
+		
 		writer.write(result);
 		return null;
 	}
 	
-	public String DeleteSelectMonit() throws IOException{
+	//删除选的结点
+	/*public String DeleteSelectMonit() throws IOException{
 		PrintWriter writer = ServletActionContext.getResponse().getWriter();
 		String mID=monitID.substring(0,3);
 		DbBean ssd=new DbBean();
@@ -131,9 +141,54 @@ public class QueryMonit extends ActionSupport {
 				return null;
 			}
 			writer.write("success");
+		
+		return null;
+	}*/
+	
+	public String DeleteSelectMonit(){
+		PrintWriter writer = null;
+		try {
+			writer = ServletActionContext.getResponse().getWriter();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		//标记哪一个表
+		String mID = monitID.substring(0,3);
+		String delete;			//删除操作的SQL语句	
+		
+		DBConnection db_connection = DBConnection.getInstance();
+		Statement statement = null;
+		try {
+			statement = db_connection.getStatement();
+			if(mID.equals("MON")){			
+				//删除监测点
+				delete = "delete from MonitoringSite where InverstigationID='" + monitID + "'";
+				statement.executeUpdate(delete);
+			}
+			
+			
+			writer.write("success");
+			System.out.println("#######删除成功");
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			writer.write("error");
+			System.out.println("--DeleteSelectMonit()--" + "删除结点失败");
+			e.printStackTrace();
+		} finally{
+			try {
+				db_connection.close(statement);
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				System.out.println("--DeleteSelectMonit()--" + "关闭操作失败");
+				e.printStackTrace();
+			}
+		}
+		
 		return null;
 	}
-	
+	//获取每一个节点详细信息
 	public String ShowMessage() throws IOException{
 		PrintWriter writer = ServletActionContext.getResponse().getWriter();
 		String mID=monitID.substring(0,3);
@@ -189,6 +244,7 @@ public class QueryMonit extends ActionSupport {
 			
 			result=result.substring(0,result.length()-1);
 			writer.write(result);
+			
 			}catch(Exception e){
 				writer.write("error");
 				System.out.println(e);

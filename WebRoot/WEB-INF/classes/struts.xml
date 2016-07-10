@@ -3,7 +3,7 @@
 <struts>
 <constant name="struts.enable.DynamicMethodInvocation" value="false" />
 <constant name="struts.multipart.saveDir" value="/tmp"/>
-	<package name="a" extends="struts-default">
+	<package name="default" extends="struts-default">
 		<action name="check" class="controller.CheckLogin"></action>
 		
 		<action name="login" class="controller.UserLogin" method="login">
@@ -47,12 +47,12 @@
     	</action>
     
     	<!-- tree action -->
-    	<!-- 获取所有的根结点 -->
+    	<!-- 获取所有的监测点 -->
     	<action name="QueryMonitSite" class="monitTree.QueryMonit" method="MonitSite"></action>
 		
 		<action name="AllMonit" class="monitTree.QueryMonit" method="GetNextMonit"></action>
 		
-		<!-- 删除节点	此action已移至各java文件实现 -->
+		<!-- 删除节点 -->
 		<action name="DeleteMonit" class="monitTree.QueryMonit" method="DeleteSelectMonit"></action>
 		
 		<!-- 添加节点记录	此action已移至各java文件实现 -->
@@ -82,5 +82,22 @@
 		<action name="op_fish" class="tree_util.Op_Fishes"></action>
 		<!-- 卵样本 -->
 		<action name="op_egg" class="tree_util.Op_FishEggs"></action>
+		
+		<!-- 上传照片 -->
+		<action name="upload" class="tree_util.UpLoadPicture">
+			<!--配置fileUpload的拦截器  -->
+			<interceptor-ref name="fileUpload">
+				<!-- 照片类型 -->
+				<param name="allowedTypes">
+					image/jpeg,image/x-png,image/bmp,image/png,image/pjpeg
+				</param>
+				<!-- 最大照片大小 -->
+				<!-- <param name="maximumSize">90000</param> -->
+			</interceptor-ref>
+			
+			<interceptor-ref name="defaultStack"></interceptor-ref>
+			
+		</action>
+	
 	</package>
 </struts>    

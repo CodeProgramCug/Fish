@@ -24,55 +24,59 @@ $(document).ready(function(){
 	$("#tree-outer").height(height-124);
 	
 
+	var tree = $('#tree');
+
+	  var MonitArr=[];
+		$.ajax({
+			type:"get",
+			async:true,
+			url:"QueryMonitSite.action",
+			success:function(result){
+				if(result=="error"){
+					alert("后台无数据，您可添加数据");
+					return;
+				}
+				var MonitArr= result.split(',');
+			    var initTree = new Array(MonitArr.length);
+			    for(var i = 0 ;i<MonitArr.length;i++){
+			    	var d = {};
+			    	console.log(MonitArr[i]);
+			    	d["text"] = MonitArr[i];
+			    	d["id"] = i.toString();
+			    	d["state"] = "open";
+			    	initTree[i] = d;
+			    }
+				/*tree.html文件中的文件夹树型列表js*/
+				tree.jstree({
+				    'core' : {
+					"check_callback" : true,
+				      'data' :
+					  [{"id":"jh",
+						"text":"华中农业大学",
+						"icon":"./css/tree_icon.png",
+						"state":"open",
+						"children": initTree
+						}]
+						
+				    },
+					'strings':{'Loading ...' : 'Please wait ...'}
+				  });
+				return true;
+			}
+		});
 	
 
 //
-/*tree.html文件中的文件夹树型列表js*/
-var tree = $('#tree');
-tree.jstree({
-    'core' : {
-	"check_callback" : true,
-      'data' :
-	  //此行数据仅做测试用，后面一行注释的代码为AJAX调用，可在实际项目中使用
-	  //"glyphicon glyphicon-tent"
-	  [{"id":"jh","text":"华中农业大学","icon":"./css/tree_icon.png"}]
-		
-	  /*{
-            'url' : 'http://localhost/fish/json_data.json',
-            'data' : function (node) {
-                return { 'id' : node.id };
-            }
-      }*/
-    },
-	'strings':{'Loading ...' : 'Please wait ...'}
-  });
+
 
 // 
-  var MonitArr=[];
-	$.ajax({
-		type:"get",
-		async:true,
-		url:"QueryMonitSite.action",
-		success:function(result){
-			if(result=="error"){
-				alert("后台无数据，您可添加数据");
-				return;
-			}
-			MonitArr=result.split(',');
-			for(var ix = 0;ix<MonitArr.length;ix ++){
-				tree.jstree().create_node('jh',MonitArr[ix],"last");	
-			}
-			//tree.jstree("create",tree.jstree("get_node",'jh'),"last", "ddd"); 
-			//tree.jstree().create_node('jh',MonitSiteArr[ix-1],"last",{data:{attr: {id : "test"+ix}, title:"Test"+ix}});	
-			tree.jstree().open_node('jh');
-			return true;
-		}
-	});
+
 //alert(t);
   //var beforeChange=0;
  // var afterChange=1;
   var selected = '';
   var beforechange= '';
+  //用户单击书节点时候触发
   tree.on("changed.jstree", function (e, data) {
 	//被选中的节点编号
 	selected =  data.selected;
@@ -83,12 +87,20 @@ tree.jstree({
 		text = "无";
 	}
 	if(text=="华中农业大学"){
+		$("#add-child-node1").hide();
+		$("#add-feature").hide();
 		$("#add-child-node").html("<span class='glyphicon glyphicon-plus'></span>&nbsp"+"添加监测点");
 	}else if(text.substring(0,3)=="MON"){
+		$("#add-child-node1").hide();
+		$("#add-feature").hide();
 		$("#add-child-node").html("<span class='glyphicon glyphicon-plus'></span>&nbsp"+"添加断面");
 	}else if(text.substring(0,3)=="SEC"){
+		$("#add-feature").hide();
 		$("#add-child-node").html("<span class='glyphicon glyphicon-plus'></span>&nbsp"+"添加测线");
+		$("#add-child-node1").show();
 	}else{
+		$("#add-child-node1").hide();
+		$("#add-feature").hide();
 		$("#add-child-node").html("<span class='glyphicon glyphicon-plus'></span>&nbsp"+"添加子节点");
 	}
 	$("#node-text").html("已选中：<small><i>"+text+"</i></small>");
@@ -97,7 +109,7 @@ tree.jstree({
 	  if(beforechange!=selected.toString()){
 		  if(selected=="jh"){
 			  $("#input-place").css({"display":"none"});
-			  $("#update-data").css({"display":"none"});
+			  $("#update-data").css({"display":"none"});  //确认修改按钮
 			  $("#add-monitsite input").each(function(){
 				  $(this).val("");
 			  });
@@ -123,6 +135,7 @@ tree.jstree({
 					  $("#add-monitsite").css({"display":"block"});
 					  $("#add-surface").css({"display":"none"});
 					  $("#add-line").css({"display":"none"});
+					  $("#add-water").css({"display":"none"});
 					  $("#add-child-sub").css({"display":"none"});
 					
 				  }else if(text.substring(0, 3)=="SEC"){
@@ -135,6 +148,7 @@ tree.jstree({
 					  $("#add-monitsite").css({"display":"none"});
 					  $("#add-surface").css({"display":"block"});
 					  $("#add-line").css({"display":"none"});
+					  $("#add-water").css({"display":"none"});
 					  $("#add-child-sub").css({"display":"none"});
 				  }else if(text.substring(0, 3)=="LIN"){
 					  $("#add-line input").each(function(i,n){
@@ -144,9 +158,19 @@ tree.jstree({
 					  $("#add-monitsite").css({"display":"none"});
 					  $("#add-surface").css({"display":"none"});
 					  $("#add-line").css({"display":"block"});
+					  $("#add-water").css({"display":"none"});
 					  $("#add-child-sub").css({"display":"none"});
 				  }else{
-					  alert("未知错误");
+					//  alert("未知错误");
+					  $("#add-water input").each(function(i,n){
+						  $(this).val(MonitArr[i+1]);
+						  
+					  });
+					  $("#add-monitsite").css({"display":"none"});
+					  $("#add-surface").css({"display":"none"});
+					  $("#add-line").css({"display":"none"});
+					  $("#add-water").css({"display":"block"});
+					  $("#add-child-sub").css({"display":"none"});
 				  }
 			  }
 		  });
@@ -237,6 +261,35 @@ tree.jstree({
 						  } 
 					  }
 			   });
+			  }else{
+				  
+				  $.ajax({
+				   	  type:"post",
+					  async:true,
+					  url:"UpdateMonit.action",
+					  data:{
+						  "addType":"4",
+						  "fatherText":text,
+						  "Number":$("#Number").val(),
+						  "waterFloor":$("#waterFloor").val(),
+						  "Depath":$("#Depath").val(),
+						  "waterWarm":$("#waterWarm").val(),
+						  "waterHeight":$("#waterHeight").val(),
+						  "waterFlow":$("#waterFlow").val()
+					  },
+					  success:function(result){
+						  if(result=="error"){
+							  alert("修改失败！");
+						  }else{
+							  $("#input-place").css({"display":"none"});
+							  alert("修改成功！");
+							  $("#add-line input").each(function(){
+								  $(this).val("");
+							  });
+						  } 
+					  }
+			   });
+				  
 			  }
 		  });
 	  }
@@ -259,6 +312,7 @@ tree.jstree({
 	
 	//changeNode();
 	var MonitArr=[];
+	//双击树节点，来向服务器请求子节点信息
 	tree.unbind("dblclick.jstree").bind("dblclick.jstree", function (obj) {
 		
 		if(!data.instance.is_leaf(selnode)) return;
@@ -278,6 +332,8 @@ tree.jstree({
 			  });
 		  }else
 		  $.ajax({
+			  
+			  ///这个需要后台的合作
 			  type:"get",
 			  async:true,
 			  url:"AllMonit.action?monitID="+text,
@@ -306,6 +362,7 @@ tree.jstree({
   
   //添加子节点
   $("#add-child-node").unbind("click").bind("click",function(){
+	  $("#add-feature").css({"display":"none"});
 	  $("#rename-place").css({"display":"none"});
 	  $("#input-place").css({"display":"block"});
 	  $("#update-data").css({"display":"none"});
@@ -314,39 +371,43 @@ tree.jstree({
 		  $("#add-monitsite").css({"display":"block"});
 		  $("#add-surface").css({"display":"none"});
 		  $("#add-line").css({"display":"none"});
+		  $("#add-water").css({"display":"none"});
 		  $("#add-child-sub").css({"display":"block"});
 	  }else if(text.substring(0,3)=="MON"){
 		  $("#add-monitsite").css({"display":"none"});
 		  $("#add-surface").css({"display":"block"});
 		  $("#add-line").css({"display":"none"});
+		  $("#add-water").css({"display":"none"});
 		  $("#add-child-sub").css({"display":"block"});
 	  }else if(text.substring(0,3)=="SEC"){
 		  $("#add-monitsite").css({"display":"none"});
 		  $("#add-surface").css({"display":"none"});
 		  $("#add-line").css({"display":"block"});
+		  $("#add-water").css({"display":"none"});
 		  $("#add-child-sub").css({"display":"block"});
 	  }else if(text.substring(0,3)=="LIN"){
 		  $("#add-monitsite").css({"display":"none"});
 		  $("#add-surface").css({"display":"none"});
 		  $("#add-line").css({"display":"none"});
-		  $("#add-child-sub").css({"display":"none"});
-		  alert("待后续加入");
+		  $("#add-water").css({"display":"block"});
+		  $("#add-child-sub").css({"display":"block"}); //增加节点的时候的确定按钮
 	  }
+	  //增加监测点
 	   $("#add-child-sub").unbind("click").bind("click",function(){
 		  if(selected=="jh"){
 			  $.ajax({
 			   	  type:"post",
 				  async:true,
-				  url:"AddChild.action",
+				  url:"op_monsite.action",
 				  data:{
-					  "addType":"1",
-					  "fatherText":text,
+					  "flag":"insert",
+					  //"fatherText":text,
 					  "Institution":$("#Institution1").val(),
 					  "Investigator":$("#Investigator1").val(),
 					  "InvestigationDate":$("#InvestigationDate1").val(),
 					  "Site":$("#Site1").val(),
 					  "River":$("#River1").val(),
-					  "Photo":$("#Photo1").val(),
+					  //"Photo":$("#Photo1").val(),
 					  "StartTime":$("#StartTime1").val(),
 					  "EndTime":$("#EndTime1").val(),
 					  "StartLongitude":$("#StartLongitude1").val(),
@@ -426,8 +487,101 @@ tree.jstree({
 				  }
 		   });
 		  }else if(text.substring(0,3)=="LIN"){
+			  $.ajax({
+			   	  type:"post",
+				  async:true,
+				  url:"AddChild.action",
+				  data:{
+					  "addType":"4",
+					  "fatherText":text,
+					  "Number":$("#Number").val(),
+					  "waterFloor":$("#waterFloor").val(),
+					  "Depath":$("#Depath").val(),
+					  "waterWarm":$("#waterWarm").val(),
+					  "waterHeight":$("#waterHeight").val(),
+					  "waterFlow":$("#waterFlow").val()
+				  },
+				  success:function(result){
+					  if(result=="error"){
+						  alert("添加失败！");
+					  }else{
+						  tree.jstree().create_node(selected,result,"last");
+						  tree.jstree().open_node(selected);
+						  $("#input-place").css({"display":"none"});
+						  alert("添加成功！");
+						  $("#add-line input").each(function(){
+							  $(this).val("");
+							  
+						  });
+					  } 
+				  }
+		   });
 			  
 		  }
+		   
+	   });
+	
+  });
+//添加浮游、底栖生物
+  $("#add-child-node1").unbind("click").bind("click",function(){
+	  $("#rename-place").css({"display":"none"});
+	  $("#input-place").css({"display":"block"});
+	  $("#update-data").css({"display":"none"});
+	  $("#add-line").hide();
+	  var  text = tree.jstree().get_text(selected);
+	  if(selected=="jh"){
+		  $("#add-monitsite").css({"display":"block"});
+		  $("#add-surface").css({"display":"none"});
+		  $("#add-feature").css({"display":"none"});
+		  $("#add-water").css({"display":"none"});
+		  $("#add-child-sub").css({"display":"block"});
+	  }else if(text.substring(0,3)=="MON"){
+		  $("#add-monitsite").css({"display":"none"});
+		  $("#add-surface").css({"display":"block"});
+		  $("#add-feature").css({"display":"none"});
+		  $("#add-water").css({"display":"none"});
+		  $("#add-child-sub").css({"display":"block"});
+	  }else if(text.substring(0,3)=="SEC"){
+		  $("#add-monitsite").css({"display":"none"});
+		  $("#add-surface").css({"display":"none"});
+		  $("#add-feature").css({"display":"block"});
+		  $("#add-water").css({"display":"none"});
+		  $("#add-child-sub").css({"display":"block"});
+	  }else if(text.substring(0,3)=="LIN"){
+		  $("#add-monitsite").css({"display":"none"});
+		  $("#add-surface").css({"display":"none"});
+		  $("#add-feature").css({"display":"none"});
+		  $("#add-water").css({"display":"block"});
+		  $("#add-child-sub").css({"display":"block"});
+	  }
+	   $("#add-child-sub").unbind("click").bind("click",function(){
+		   $.ajax({
+			   	  type:"post",
+				  async:true,
+				  url:"AddChild.action",
+				  data:{
+					  "addType":"33",
+					  "fea":$("#fea").val(),
+					  "fea1":$("#fea1").val(),
+					  "fea2":$("#fea2").val(),
+					  "fea3":$("#fea3").val(),
+					  "fea4":$("#fea4").val(),
+				  },
+				  success:function(result){
+					  if(result=="error"){
+						  alert("添加失败！");
+					  }else{
+						  tree.jstree().create_node(selected,result,"last");
+						  tree.jstree().open_node(selected);
+						  $("#input-place").css({"display":"none"});
+						  alert("添加成功！");
+						  $("#add-feature input").each(function(){
+							  $(this).val("");
+							  
+						  });
+					  } 
+				  }
+		   });
 		   
 	   });
 	

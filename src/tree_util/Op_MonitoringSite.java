@@ -49,16 +49,16 @@ public class Op_MonitoringSite extends ActionSupport {
 		db_connection = DBConnection.getInstance();
 		
 		if(flag.equals("insert")){
-			//更新操作
-			update();
-		}else if(flag.equals("update")){
 			//插入操作
 			insert();
+		}else if(flag.equals("update")){
+			//更新操作
+			update();
 		}else if(flag.equals("delete")){
 			//删除操作
 			delete();
 		}
-		return SUCCESS;
+		return null;
 	}
 	
 	private void update(){
