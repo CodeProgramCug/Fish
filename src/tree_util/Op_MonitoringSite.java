@@ -37,6 +37,7 @@ public class Op_MonitoringSite extends ActionSupport {
 	private String EndLatitude;
 	private String Weather;
 	private String Temperature;
+	private String Photo;
 	
 	private PrintWriter writer = null;
 	
@@ -60,7 +61,7 @@ public class Op_MonitoringSite extends ActionSupport {
 	
 	private void update(){
 		//获取照片路径
-		//PATH = START + 
+		PATH = UpLoadPicture.upload(Photo, START);
 		
 		String sql = "";
 		sql += "update MonitoringSite set Institution='" + Institution + "',Investigator='" + Investigator + "',InvestigationDate='" + InvestigationDate + "',Site='";
@@ -97,7 +98,7 @@ public class Op_MonitoringSite extends ActionSupport {
 	
 	private void insert(){
 		//获取照片路径
-		//PATH = START + 
+		PATH = UpLoadPicture.upload(Photo, START); 
 		
 		String insert = "insert into MonitoringSite values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 		String childID = START + TimeFormat.getNowTime();
@@ -265,6 +266,14 @@ public class Op_MonitoringSite extends ActionSupport {
 
 	public void setFlag(String flag) {
 		this.flag = flag;
+	}
+
+	public String getPhoto() {
+		return Photo;
+	}
+
+	public void setPhoto(String photo) {
+		Photo = photo;
 	}
 	
 }

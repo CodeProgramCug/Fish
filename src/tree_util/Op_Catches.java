@@ -42,14 +42,11 @@ public class Op_Catches extends ActionSupport {
 		db_connection = DBConnection.getInstance();
 		
 		if(flag.equals("insert")){
-			//更新操作
-			update();
-		}else if(flag.equals("update")){
 			//插入操作
 			insert();
-		}else if(flag.equals("delete")){
-			//删除操作
-			delete();
+		}else if(flag.equals("update")){
+			//更新操作
+			update();
 		}
 		return null;
 	}
@@ -127,30 +124,6 @@ public class Op_Catches extends ActionSupport {
 		
 	}
 	
-	private void delete(){
-		String delete = "delete from Catches where SampleID='" + SampleID
-				+ "' and ID_WaterLayer='" + ID_WaterLayer + "'";
-		
-		Statement statement = null;
-		try {
-			statement = db_connection.getStatement();
-			writer.write("success");
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			writer.write("error");
-			System.out.println("渔获物删除错误");
-			e.printStackTrace();
-		}finally{
-			try {
-				db_connection.close(statement);
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				System.out.println("渔获物删除操作关闭失败");
-				e.printStackTrace();
-			}
-		}
-		
-	}
 	public String getName() {
 		return Name;
 	}

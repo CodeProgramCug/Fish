@@ -238,7 +238,7 @@ $(document).ready(function(){
 						  "InvestigationDate":$("#InvestigationDate1").val(),
 						  "Site":$("#Site1").val(),
 						  "River":$("#River1").val(),
-						  //"Photo":$("#Photo1").val(),
+						  "Photo":$("#Photo1").val(),
 						  "StartTime":$("#StartTime1").val(),
 						  "EndTime":$("#EndTime1").val(),
 						  "StartLongitude":$("#StartLongitude1").val(),
@@ -497,6 +497,20 @@ $(document).ready(function(){
 			  $(this).val("");	  
 		  });
 	  } else if(text.substring(0,3)=="PNT"){
+		  $.ajax({									//查询已有几个采样水层
+			  type:"post",
+			  async:true,
+			  url:"op_watlay.action",
+			  data:{
+				  "flag":"query",
+				  "ID_MeasuringPoint":text
+			  },
+			  success:function(result){
+				  if(result == "enough"){alert("已经添加了三个采样水层"); 
+				  $("#add-water").css({"display":"none"});
+				  $("#add-child-sub").css({"display":"none"});}
+			  }
+		  });
 		  $("#add-monitsite").css({"display":"none"});
 		  $("#add-surface").css({"display":"none"});
 		  $("#add-line").css({"display":"none"});
@@ -507,7 +521,9 @@ $(document).ready(function(){
 			  $(this).val("");	  
 		  });
 	  }
-	   $("#add-child-sub").unbind("click").bind("click",function(){		//增加监测点
+	   $("#add-child-sub").unbind("click").bind("click",function(){	
+		   //增加监测点
+		 console.log("aaa");
 		  if(selected=="jh"){
 			  $.ajax({
 			   	  type:"post",
@@ -521,7 +537,7 @@ $(document).ready(function(){
 					  "InvestigationDate":$("#InvestigationDate1").val(),
 					  "Site":$("#Site1").val(),
 					  "River":$("#River1").val(),
-					  //"Photo":$("#Photo1").val(),
+					  "Photo":$("#Photo1").val(),
 					  "StartTime":$("#StartTime1").val(),
 					  "EndTime":$("#EndTime1").val(),
 					  "StartLongitude":$("#StartLongitude1").val(),
@@ -627,6 +643,7 @@ $(document).ready(function(){
 		   });
 			  
 		  }else {
+			
 			  $.ajax({								//添加采样水层
 			   	  type:"post",
 				  async:true,

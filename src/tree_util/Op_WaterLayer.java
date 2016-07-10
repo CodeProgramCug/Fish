@@ -2,6 +2,7 @@ package tree_util;
 
 import java.io.PrintWriter;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
@@ -46,6 +47,9 @@ public class Op_WaterLayer extends ActionSupport {
 		}else if(flag.equals("update")){
 			//更新操作
 			update();
+		}else if(flag.equals("query")){
+			//查询操作
+			querySum();
 		}
 		return null;
 	}
@@ -84,6 +88,7 @@ public class Op_WaterLayer extends ActionSupport {
 	}
 	
 	private void insert(){
+
 		String insert = "insert into WaterLayer values(?,?,?,?,?,?,?)";
 		String childID = START + TimeFormat.getNowTime();
 		
@@ -118,6 +123,46 @@ public class Op_WaterLayer extends ActionSupport {
 		}
 	}
 
+	//查询采样水层总数(一对三关系)
+	private void querySum(){
+		int m = 0;				//标记有几条记录
+		
+		String query = "select * from WaterLayer where ID_MeasuringPoint='" 
+						+ ID_MeasuringPoint + "'";
+		
+		Statement statement = null;
+		ResultSet resultSet = null;
+		try {
+			statement = db_connection.getStatement();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		try {
+			resultSet = statement.executeQuery(query);
+			while (resultSet.next()) {
+				m++;
+			}
+			
+			if(m == 3){
+				writer.write("enough");
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			writer.write("error");
+			e.printStackTrace();
+		}finally{
+			try {
+				db_connection.close(resultSet,statement);
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+	}
+	
 	public String getLayer() {
 		return Layer;
 	}

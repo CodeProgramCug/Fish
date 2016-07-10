@@ -25,6 +25,7 @@ public class Op_CatchTools extends ActionSupport {
 	
 	private String SampleID;
 	private String Name;
+	private String Photo;
 	private String NetsModel;
 	private String NetMouthArea;
 	private String NetMouthDip;
@@ -44,21 +45,18 @@ public class Op_CatchTools extends ActionSupport {
 		db_connection = DBConnection.getInstance();
 		
 		if(flag.equals("insert")){
-			//更新操作
-			update();
-		}else if(flag.equals("update")){
 			//插入操作
 			insert();
-		}else if(flag.equals("delete")){
-			//删除操作
-			delete();
+		}else if(flag.equals("update")){
+			//更新操作
+			update();
 		}
 		return null;
 	}
 	
 	private void update(){
 		//获取照片路径
-		//PATH = START + 
+		PATH = UpLoadPicture.upload(Photo, START); 
 		
 		String update = "update CatchTools set Name='" + Name + "',Photo='"
 				+ PATH + "',NetsModel='" + NetsModel + "',NetMouthArea='"
@@ -109,7 +107,7 @@ public class Op_CatchTools extends ActionSupport {
 	//更新表CatchTools(插入)
 	private int insertCatchTools(DBConnection db_connection,String childID){
 		//获取照片路径
-		//PATH = START + 
+		PATH = UpLoadPicture.upload(Photo, START);
 		
 		String insert = "insert into CatchTools values(?,?,?,?,?,?,?,?,?)";	
 		int m = 0;
@@ -172,80 +170,6 @@ public class Op_CatchTools extends ActionSupport {
 		return m;
 	}
 
-	private void delete(){
-		int flag1,flag2;		//标记两次操作是否成功
-		flag1 = deleteCatchTools(db_connection);
-		flag2 = deleteWaterLayer_CatchTools(db_connection);
-		
-		if(flag1 == 1 && flag2 == 2){
-			writer.write("success");
-		}else{
-			writer.write("error");
-		}
-	}
-	
-	//更新表CatchTools(删除)
-	private int deleteCatchTools(DBConnection db_connection){
-		String delete = "delete from CatchTools where SampleID='" + SampleID + "'";
-		int m = 0;
-		
-		Statement statement = null;
-		try {
-			statement = db_connection.getStatement();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		try {
-			statement.executeUpdate(delete);
-			m = 1;
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			System.out.println("1--网具删除失败");
-			e.printStackTrace();
-		} finally{
-			try {
-				db_connection.close(statement);
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				System.out.println("1--网具删除操作关闭失败");
-				e.printStackTrace();
-			}
-		}
-		return m;
-	}
-	//更新表WaterLayer_CatchTools(删除)
-	private int deleteWaterLayer_CatchTools(DBConnection db_connection){
-		String delete = "delete from WaterLayer_CatchTools where ID_WaterLayer='"
-				+ ID_WaterLayer + "' and ID_CatchTools='" + SampleID + "'";
-		int m = 0;
-		
-		Statement statement = null;
-		try {
-			statement = db_connection.getStatement();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		try {
-			statement.executeUpdate(delete);
-			m = 2;
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			System.out.println("2--网具删除失败");
-			e.printStackTrace();
-		}finally{
-			try {
-				db_connection.close(statement);
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				System.out.println("2--网具删除操作关闭失败");
-				e.printStackTrace();
-			}
-		}
-		return m;
-	}
 	public String getName() {
 		return Name;
 	}
@@ -303,6 +227,14 @@ public class Op_CatchTools extends ActionSupport {
 
 	public void setID_WaterLayer(String iD_WaterLayer) {
 		ID_WaterLayer = iD_WaterLayer;
+	}
+
+	public String getPhoto() {
+		return Photo;
+	}
+
+	public void setPhoto(String photo) {
+		Photo = photo;
 	}
 
 	public String getFlag() {

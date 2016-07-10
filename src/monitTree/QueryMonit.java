@@ -19,31 +19,48 @@ public class QueryMonit extends ActionSupport {
 	//获取所有的监测点
 	public String MonitSite() throws IOException{
 		PrintWriter writer = ServletActionContext.getResponse().getWriter();
+		
+		String sql = "SELECT InverstigationID FROM MonitoringSite";
+		
 		String result="";
-		DbBean ssd=new DbBean();
-		String sql="SELECT InverstigationID FROM MonitoringSite";
-		ResultSet rs=null;
+		
+		DBConnection dbConnection = DBConnection.getInstance();
+		Statement statement = null;
+		ResultSet rs = null;
 		try {
-			rs=ssd.executeQuery(sql);
-			
+			statement = dbConnection.getStatement();
+		} catch (SQLException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
+		try {
+			rs = statement.executeQuery(sql);
 			while(rs.next()){
 				result+=rs.getString(1)+",";
 			}
 			
-			result=result.substring(0, result.length()-1);
+			result = result.substring(0, result.length()-1);
+			writer.write(result);
+			
 			System.out.println("monitSite ID result:"+result);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			writer.write("error");
-			return null;
+		} finally{
+			try {
+				dbConnection.close(rs,statement);
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		
-		writer.write(result);
 		return null;
 	}
 		
-	//获取下一级结点
+	//获取当前结点的下一级结点
 	public String GetNextMonit() throws IOException{
 		PrintWriter writer = ServletActionContext.getResponse().getWriter();
 		
@@ -92,67 +109,30 @@ public class QueryMonit extends ActionSupport {
 			while(rs.next()){
 				result+=rs.getString(1)+",";
 			}
-		
-		}catch(Exception e){
-			result += "00";
+			
+			if(result != "" && !result.equals("01") && !result.equals("00")){
+				result = result.substring(0, result.length()-1);
+			}
+			
 			writer.write(result);
-			return null;
+			
+		}catch(Exception e){
+			writer.write(result += "00");
+			e.printStackTrace();
+		}finally{
+			try {
+				db_connection.close(rs, statement);
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		
-		if(result != "" && !result.equals("01") && !result.equals("00")){
-			result = result.substring(0, result.length()-1);
-		}
-		
-		writer.write(result);
 		return null;
 	}
 	
 	//删除选的结点
-	/*public String DeleteSelectMonit() throws IOException{
-		PrintWriter writer = ServletActionContext.getResponse().getWriter();
-		String mID=monitID.substring(0,3);
-		DbBean ssd=new DbBean();
-		String sql="";
-		String sql2="";
-		ResultSet rs=null;
-		try{
-			if(mID.equals("MON")){
-				sql+="select ID from FractureSurface where ID_MonitoringSite='"+monitID+"'";
-				rs=ssd.executeQuery(sql);
-				while(rs.next()){
-					sql2="delete from MeasuringLine where ID_FractureSurface='"+rs.getString(1)+"'";
-					ssd.executeUpdate(sql2);
-				}
-				sql2="delete from FractureSurface where ID_MonitoringSite='"+monitID+"'";
-				ssd.executeUpdate(sql2);
-				sql2="delete from MonitoringSite where InverstigationID='"+monitID+"'";
-			}else if(mID.equals("SEC")){
-				sql+="delete from MeasuringLine where ID_FractureSurface ='"+monitID+"'";
-				ssd.executeUpdate(sql);
-				sql2+="delete from FractureSurface where ID='"+monitID+"'";
-				ssd.executeUpdate(sql2);
-			}else if(mID.equals("LIN")){
-				sql+="delete from MeasuringLine where ID="+monitID+"'";
-				ssd.executeQuery(sql);
-			}else{
-					writer.write("isnull");
-					return null;
-			}
-			
-			}catch(Exception e){
-				System.out.println(e);
-				writer.write("error");
-				return null;
-			}
-			writer.write("success");
-		
-		return null;
-	}*/
-	
 	public String DeleteSelectMonit(){
-		
-		System.out.println("@@@@@--" + monitID);
-		
 		PrintWriter writer = null;
 		try {
 			writer = ServletActionContext.getResponse().getWriter();
@@ -191,15 +171,26 @@ public class QueryMonit extends ActionSupport {
 				
 			}else if(mID.equals("NET")){
 				//删除网具
+				//先删除关联的第三张表
+				String delete2 = "delete from WaterLayer_CatchTools where ID_CatchTools='"
+						+ monitID + "'";
+				statement.executeUpdate(delete2);
+				System.out.println("@@@@关联的第三张表#######删除成功");
+				
+				//删除网具表的记录
+				delete = "delete from CatchTools where SampleID='" + monitID + "'";
 				
 			}else if(mID.equals("CTH")){
 				//删除渔获物
+				delete = "delete from Catches where SampleID='" + monitID + "'";
 				
 			}else if(mID.equals("FSS")){
 				//删除鱼样本
+				delete = "delete from Fishes where SampleID='" + monitID + "'";
 				
 			}else if(mID.equals("FSE")){
 				//删除卵样本
+				delete = "delete from FishEggs where SampleID='" + monitID + "'";
 				
 			}
 			
@@ -230,9 +221,18 @@ public class QueryMonit extends ActionSupport {
 		
 		String mID=monitID.substring(0,3);
 		String result="";
-		DbBean ssd=new DbBean();
 		String sql="";
-		ResultSet rs=null;
+		
+		DBConnection db_connection = DBConnection.getInstance();
+		Statement statement = null;
+		ResultSet rs = null;
+		try {
+			statement = db_connection.getStatement();
+		} catch (SQLException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
 		try{
 			if(mID.equals("MON")){
 				//监测点
@@ -272,20 +272,27 @@ public class QueryMonit extends ActionSupport {
 				
 			}
 			
-			rs=ssd.executeQuery(sql);
+			rs = statement.executeQuery(sql);
 			
 			while(rs.next()){
 				for(int i=1;i<=rs.getMetaData().getColumnCount();i++)
 					result+=rs.getString(i)+",";
 			}
 			
-			result=result.substring(0,result.length()-1);
+			result = result.substring(0,result.length()-1);
 			
 			writer.write(result);
 			
 			}catch(Exception e){
 				writer.write("error");
 				System.out.println(e);
+			}finally{
+				try {
+					db_connection.close(rs, statement);
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		
 		return null;
