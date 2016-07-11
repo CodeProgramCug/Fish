@@ -38,6 +38,7 @@ public class Op_WaterLayer extends ActionSupport {
 	@Override
 	public String execute() throws Exception {
 		// TODO Auto-generated method stub
+		ServletActionContext.getResponse().setContentType("text/html;charset=utf-8");
 		writer = ServletActionContext.getResponse().getWriter();
 		db_connection = DBConnection.getInstance();
 		
@@ -48,8 +49,11 @@ public class Op_WaterLayer extends ActionSupport {
 			//更新操作
 			update();
 		}else if(flag.equals("query")){
-			//查询操作
+			//查询一个测点对应的采样水层总数操作
 			querySum();
+		}else if(flag.equals("get_all")){
+			//获取所有的采样水层结点
+			allWaterLayer();
 		}
 		return null;
 	}
@@ -122,6 +126,45 @@ public class Op_WaterLayer extends ActionSupport {
 			}
 		}
 	}
+	
+	//获取所有的采样水层
+	public String allWaterLayer(){
+		String query = "select ID from WaterLayer";
+		String result = "";
+		
+		Statement statement = null;
+		ResultSet resultSet = null;
+		try {
+			statement = db_connection.getStatement();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			writer.write("error");
+			e.printStackTrace();
+		}
+		
+		try {
+			resultSet = statement.executeQuery(query);
+			while(resultSet.next()){
+				result += resultSet.getString(1) + "'";
+			}
+			result = result.substring(0, result.length()-1);
+			
+			if(result.equals("")){
+				writer.write("no");
+			}else{
+				writer.write(result);
+			}
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			System.out.println("所有的采样水层查询错误");
+			writer.write("error");
+			e.printStackTrace();
+		}
+		
+		return null;
+	}
+		
 
 	//查询采样水层总数(一对三关系)
 	private void querySum(){

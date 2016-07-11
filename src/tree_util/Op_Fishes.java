@@ -38,6 +38,7 @@ public class Op_Fishes extends ActionSupport {
 	@Override
 	public String execute() throws Exception {
 		// TODO Auto-generated method stub
+		ServletActionContext.getResponse().setContentType("text/html;charset=utf-8");
 		writer = ServletActionContext.getResponse().getWriter();
 		db_connection = DBConnection.getInstance();
 		
