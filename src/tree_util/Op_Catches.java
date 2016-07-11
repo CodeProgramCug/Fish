@@ -25,6 +25,7 @@ public class Op_Catches extends ActionSupport {
 	private static String PATH = "";					//照片在服务器上的路径("|"隔开)
 	
 	private String SampleID;
+	private String Photo;
 	private String Name;
 	private String TotalQuality;
 	private String EggQuality;
@@ -53,7 +54,7 @@ public class Op_Catches extends ActionSupport {
 	
 	private void update(){
 		//获取照片路径
-		//PATH = START + 
+		PATH = UpLoadPicture.upload(Photo, START);
 		
 		String update = "update Catches set Name='" + Name + "',Photo='"
 				+ PATH + "',TotalQuality='" + TotalQuality + "',EggQuality='"
@@ -89,7 +90,7 @@ public class Op_Catches extends ActionSupport {
 	
 	private void insert(){
 		//获取照片路径
-		//PATH = START +
+		PATH = UpLoadPicture.upload(Photo, START);
 		
 		String insert = "insert into Catches values(?,?,?,?,?,?,?)";
 		String childID = START + TimeFormat.getNowTime();
@@ -170,6 +171,13 @@ public class Op_Catches extends ActionSupport {
 	public void setSampleID(String sampleID) {
 		SampleID = sampleID;
 	}
-	
+
+	public String getPhoto() {
+		return Photo;
+	}
+
+	public void setPhoto(String photo) {
+		Photo = photo;
+	}
 	
 }

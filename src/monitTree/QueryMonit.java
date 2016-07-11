@@ -172,10 +172,10 @@ public class QueryMonit extends ActionSupport {
 			}else if(mID.equals("NET")){
 				//删除网具
 				//先删除关联的第三张表
-				String delete2 = "delete from WaterLayer_CatchTools where ID_CatchTools='"
+				/*String delete2 = "delete from WaterLayer_CatchTools where ID_CatchTools='"
 						+ monitID + "'";
 				statement.executeUpdate(delete2);
-				System.out.println("@@@@关联的第三张表#######删除成功");
+				System.out.println("@@@@关联的第三张表#######删除成功");*/
 				
 				//删除网具表的记录
 				delete = "delete from CatchTools where SampleID='" + monitID + "'";
