@@ -1,0 +1,24 @@
+.wa{
+	margin-top:100px;
+	margin-left:220px;
+	width:1200px;
+}
+
+.wa input{
+	height:20px;
+	border-radius:5px;
+	border-color:#8deeee;
+
+}
+
+.wa font{
+	color:red;
+}
+.treeWidth{
+	width:100px;
+}
+
+.water-left2{display:inline-block;height:28px;width:400px;margin-left:60px;margin-top:10px;line-height:3em;}
+.addButton{border:0px;background:#3487C0;margin-top:10px;margin-left:20px;display:none;border:solide 1px #36a4d3;color:white; border-radius:3px;padding:3px 6px;}
+.addButton2{border:0px;background:#3487C0;margin-top:10px;margin-left:30px;display:none;border:solide 1px #36a4d3;color:white;border-radius:3px;padding:3px 6px;}
+.deleteButton{background:red;border:0px;margin-top:10px;margin-left:40px;display:none;border:solide 1px #36a4d3;color:white;border-radius:3px;padding:3px 6px;}

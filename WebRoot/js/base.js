@@ -186,7 +186,6 @@ $(document).ready(function(){
 					  $("#add-water").css({"display":"none"});
 					  $("#add-child-sub").css({"display":"none"});
 				  }else if(text.substring(0,3)=="PNT"){
-					  console.log("text="+text+"--aaaaaaaaaaaaaaaaa");
 					//  alert("未知错误");
 					  $("#add-Dot input").each(function(){
 						  $(this).val("");	  

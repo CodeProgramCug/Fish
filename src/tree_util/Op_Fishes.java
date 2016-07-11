@@ -53,6 +53,7 @@ public class Op_Fishes extends ActionSupport {
 	}
 	
 	private void update(){
+		System.out.println("@@@@@@@@进入");
 		//获取照片路径
 		PATH = UpLoadPicture.upload(Photo, START);  
 		

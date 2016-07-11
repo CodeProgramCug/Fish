@@ -2,6 +2,7 @@ package tree_util;
 
 import java.io.PrintWriter;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
@@ -51,6 +52,9 @@ public class Op_CatchTools extends ActionSupport {
 		}else if(flag.equals("update")){
 			//更新操作
 			update();
+		}else if(flag.equals("query")){
+			//查询网具是否已有
+			allTools();
 		}
 		return null;
 	}
@@ -171,6 +175,42 @@ public class Op_CatchTools extends ActionSupport {
 		return m;
 	}
 
+	//查询网具是否已有
+	private void allTools(){
+		String query = "select * from WaterLayer_CatchTools where ID_WaterLayer='" + ID_WaterLayer + "'";
+		
+		int m = 0;
+		Statement statement = null;
+		ResultSet resultSet = null;
+		try {
+			statement = db_connection.getStatement();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		try {
+			resultSet = statement.executeQuery(query);
+			while(resultSet.next()){
+				m ++;
+			}
+			
+			if(m == 1){
+				writer.write("enough");
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally{
+			try {
+				db_connection.close(resultSet, statement);
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+	}
 	public String getName() {
 		return Name;
 	}

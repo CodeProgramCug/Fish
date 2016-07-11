@@ -103,17 +103,49 @@ public class QueryMonit extends ActionSupport {
 				//搜索采样水层
 				sql = "select ID from WaterLayer where ID_MeasuringPoint='" + monitID + "'";
 				
+			}else if(mID.equals("WLE")){
+				
+				//搜索渔获物
+				String sql2 = "select SampleID from Catches where ID_WaterLayer='" + monitID + "'";
+				
+				Statement statement2 = db_connection.getStatement();
+				ResultSet resultSet = statement2.executeQuery(sql2);
+				while(resultSet.next()){
+					result += resultSet.getString(1) + ",";
+				}
+				
+				resultSet.close();
+				statement2.close();
+				
+				//搜索网具
+				sql = "select ID_CatchTools from WaterLayer_CatchTools where ID_WaterLayer='" + monitID + "'";
+			}else if(mID.equals("CTH")){
+				//搜索鱼样本
+				String sql2 = "select SampleID from Fishes where ID_Catches='" + monitID + "'";
+				
+				Statement statement2 = db_connection.getStatement();
+				ResultSet resultSet = statement2.executeQuery(sql2);
+				while(resultSet.next()){
+					result += resultSet.getString(1) + ",";
+				}
+				
+				resultSet.close();
+				statement2.close();
+				
+				//搜索卵样本
+				sql = "select SampleID from FishEggs where ID_Catches='" + monitID + "'";
 			}
 			
 			rs = statement.executeQuery(sql);
 			while(rs.next()){
-				result+=rs.getString(1)+",";
+				result += rs.getString(1)+",";
 			}
 			
 			if(result != "" && !result.equals("01") && !result.equals("00")){
 				result = result.substring(0, result.length()-1);
 			}
 			
+			System.out.println(result);
 			writer.write(result);
 			
 		}catch(Exception e){

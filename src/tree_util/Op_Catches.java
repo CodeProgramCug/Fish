@@ -90,6 +90,7 @@ public class Op_Catches extends ActionSupport {
 	}
 	
 	private void insert(){
+		
 		//获取照片路径
 		PATH = UpLoadPicture.upload(Photo, START);
 		

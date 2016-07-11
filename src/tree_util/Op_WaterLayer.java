@@ -145,7 +145,7 @@ public class Op_WaterLayer extends ActionSupport {
 		try {
 			resultSet = statement.executeQuery(query);
 			while(resultSet.next()){
-				result += resultSet.getString(1) + "'";
+				result += resultSet.getString(1) + ",";
 			}
 			result = result.substring(0, result.length()-1);
 			
