@@ -1,4 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
+ <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 
 <%@ page language="java" import="java.util.*"%>
@@ -19,9 +19,14 @@
 <link href="css/base.css" rel="stylesheet" />
 <link href="css/table.css" rel="stylesheet" />
 
-<script type="text/javascript" src="js/jquery-1.12.3.min.js"></script>
-<script type="text/javascript" src="js/base.js"></script>
 
+<link href="css/base.css"rel="stylesheet"/>
+<link href="css/jstree.min.css"rel="stylesheet"/>
+<link href="css/xiaolong.css"rel="stylesheet"/>
+<script type="text/javascript"src="js/jquery-1.12.3.min.js"></script>
+<script type="text/javascript"src="js/use.js"></script>
+<script type="text/javascript"src="js/jstree.min.js"></script>
+<script type="text/javascript" src="js/My97DatePicker/WdatePicker.js"></script>
 
 <style>
 .dropbtn {
@@ -67,60 +72,103 @@
 	<%@ include file="top.jsp"%>
 	<div class="section">
 		<%@ include file="left.jsp"%>
-		<div class="article" id="article">
-			<div>下属：</div>
+		<div class="article">
+			<div id="tree-outer">
+				<div id="tree"></div>
+			</div>
+		
+			<div id="tree-table" >
+				<div id="node-text"></div>
+		<div id="input-place" >
+			<div id="add-monitsite" class="add-data">
+				<div class="context5" >
+				<div class="float-left2">
+					<span>用户名	:&nbsp</span><br>
+					<span>密码:&nbsp</span><br>
+					<span>联系方式:&nbsp</span><br>
+					<span>Email:&nbsp</span><br>
+				
+				</div>
+				<div class="float-left2" >
+					<input type="text" id="username"><font>&nbsp*</font></input><br>
+					<input type="text" id="password"><font>&nbsp*</font></input><br>
+					<input type="text" id="tel"></input><br>
+					<input type="text" id="email"><font>&nbsp*</font></input><br>
+				</div>	
+				<div class="float-left2">
+					<span>身份:&nbsp</span><br>
+					<span>用户状态:&nbsp</span><br>
+					<span>上级:&nbsp</span><br>
+					<span>角色:&nbsp</span><br>
+				</div>
+				<div class="float-left2">
+					<input type="text" id="identify" ><font>&nbsp*</font></input><br>
+					<input type="text" id="active"><font>&nbsp*</font></input><br>
+					<input type="text" id="superior" /><font>&nbsp*</font></input><br>
+					<input type="text" id="roleName"><font>&nbsp*</font></input><br>
+					
+					
+				</div>			
+				
+			</div>
+		</div>
+				
+		
+	
+					
 
-			<div>
-				<table class="bordered"
-					style="margin-left: auto;margin-right: auto;">
-					<thead>
+					
+			<button style="margin-left:40%" id="update-data"class="btn btn-primary">更新数据</button>
+			<button style="margin-left:40%" id="delete-data"class="btn btn-primary">删除当前用户</button>
+			<button style="margin-left:40%" id="new-data"class="btn btn-primary">增加用户</button>
+					
+				</div>
+			
+				
+				
+
+		<!-- 添加浮游、底栖生物-->	
+		<div id="add-feature" class="add-data">
+				
+			</div>
+		</div>
+
+				
+				
+		
+				
+				<!--<h4>调查基本信息</h4>
+				<br/>
+				<p class="">
+					<table class="table">
 						<tr>
-							<th>username</th>
-							<th>Telephone</th>
-							<th>Email</th>
-							<th>Description</th>
-							<th>superiorName</th>
-							<th>roleName</th>
-							<th>active</th>
-							<th>修改</th>
-							<th>删除</th>
-							<th>查看</th>
+							<th>1</th>
+							<th>2</th>
+							<th>3</th>
 						</tr>
-					</thead>
-					<%
-					for (int i = 0; i < listUserinfo1.size(); i++) {
-						User useritem = listUserinfo1.get(i);
-				%>
-					<tr>
-						<td><%=useritem.getUsername()%></td>
-						<td><%=useritem.getTelephone()%></td>
-						<td><%=useritem.getEmail()%></td>
-						<td><%=useritem.getDescription()%></td>
-						<td><%=useritem.getSuperiorname()%></td>
-						<td><%=useritem.getRolename()%></td>
-						<td><%=useritem.getActive()%></td>
-						<td><a href="#"><i class="icon-pencil"></i> Edit</a>
-						</td>
-						<td><a href="#"><i class="icon-pencil"></i> Delete</a>
-						</td>
-						<td>
-						
-						<div class="dropdown">
-  <a class="dropbtn">下拉菜单</a>
-  <div class="dropdown-content">
-    <a href="http://www.runoob.com">菜鸟教程 1</a>
-    <a href="http://www.runoob.com">菜鸟教程 2</a>
-    <a href="http://www.runoob.com">菜鸟教程 3</a>
-  </div>
-</div>
-						
-						
-						</td>
-					</tr>
-					<%
-					}
-				%>
-				</table>
+						<tr>
+							<td>2</td>
+							<td>3</td>
+							<td>4</td>
+						</tr>
+						<tr>
+							<td>2</td>
+							<td>3</td>
+							<td>4</td>
+						</tr>
+						<tr>
+							<td>2</td>
+							<td>3</td>
+							<td>4</td>
+						</tr>
+						<tr>
+							<td>2</td>
+							<td>3</td>
+							<td>4</td>
+						</tr>
+					</table>
+					
+				</p>-->
 			</div>
 		</div>
 		<div class="footer">

@@ -1,10 +1,12 @@
 package tree_util;
 
+import java.io.File;
 import java.io.PrintWriter;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.List;
 
 import org.apache.struts2.ServletActionContext;
 
@@ -26,14 +28,17 @@ public class Op_CatchTools extends ActionSupport {
 	
 	private String SampleID;
 	private String Name;
-	private String Photo;
 	private String NetsModel;
 	private String NetMouthArea;
 	private String NetMouthDip;
 	private String StartTime;
 	private String EndTime;
 	private String NetMouthVelocity;
-	private String ID_WaterLayer;				//采样水层的ID,用于更新WaterLayer_CatchTools表		
+	private String ID_WaterLayer;				//采样水层的ID,用于更新WaterLayer_CatchTools表
+	
+	private List<File> Photo;					//文件引用
+	private List<String> PhotoFileName;			//文件名字
+	private List<String> PhotoContentType;		//文件类型
 	
 	private PrintWriter writer = null;
 	
@@ -61,7 +66,7 @@ public class Op_CatchTools extends ActionSupport {
 	
 	private void update(){
 		//获取照片路径
-		PATH = UpLoadPicture.upload(Photo, START); 
+		PATH = UpLoadPicture.upload(Photo, PhotoFileName, START);
 		
 		String update = "update CatchTools set Name='" + Name + "',Photo='"
 				+ PATH + "',NetsModel='" + NetsModel + "',NetMouthArea='"
@@ -112,7 +117,7 @@ public class Op_CatchTools extends ActionSupport {
 	//更新表CatchTools(插入)
 	private int insertCatchTools(DBConnection db_connection,String childID){
 		//获取照片路径
-		PATH = UpLoadPicture.upload(Photo, START);
+		PATH = UpLoadPicture.upload(Photo, PhotoFileName, START);
 		
 		String insert = "insert into CatchTools values(?,?,?,?,?,?,?,?,?)";	
 		int m = 0;
@@ -270,12 +275,28 @@ public class Op_CatchTools extends ActionSupport {
 		ID_WaterLayer = iD_WaterLayer;
 	}
 
-	public String getPhoto() {
+	public List<File> getPhoto() {
 		return Photo;
 	}
 
-	public void setPhoto(String photo) {
+	public void setPhoto(List<File> photo) {
 		Photo = photo;
+	}
+
+	public List<String> getPhotoFileName() {
+		return PhotoFileName;
+	}
+
+	public void setPhotoFileName(List<String> photoFileName) {
+		PhotoFileName = photoFileName;
+	}
+
+	public List<String> getPhotoContentType() {
+		return PhotoContentType;
+	}
+
+	public void setPhotoContentType(List<String> photoContentType) {
+		PhotoContentType = photoContentType;
 	}
 
 	public String getFlag() {

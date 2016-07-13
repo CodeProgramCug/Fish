@@ -1,16 +1,20 @@
 package tree_util;
 
+import java.io.File;
 import java.io.PrintWriter;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.List;
 
 import org.apache.struts2.ServletActionContext;
 
+import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
 
 import db_tool.DBConnection;
 import db_tool.TimeFormat;
+import db_tool.User;
 
 /**
  * 添加、更新、删除	 监测点
@@ -37,11 +41,16 @@ public class Op_MonitoringSite extends ActionSupport {
 	private String EndLatitude;
 	private String Weather;
 	private String Temperature;
-	private String Photo;
+	
+	private List<File> Photo;					//文件引用
+	private List<String> PhotoFileName;			//文件名字
+	private List<String> PhotoContentType;		//文件类型
 	
 	private PrintWriter writer = null;
 	
 	private DBConnection db_connection = null;
+	
+	private Account account = null;
 	
 	@Override
 	public String execute() throws Exception {
@@ -49,7 +58,9 @@ public class Op_MonitoringSite extends ActionSupport {
 		ServletActionContext.getResponse().setContentType("text/html;charset=utf-8");
 		writer = ServletActionContext.getResponse().getWriter();
 		db_connection = DBConnection.getInstance();
-		
+		//获取session中保存的用户信息
+		account = (Account) ActionContext.getContext().getSession().get("account");
+				
 		if(flag.equals("insert")){
 			//插入操作
 			insert();
@@ -62,7 +73,7 @@ public class Op_MonitoringSite extends ActionSupport {
 	
 	private void update(){
 		//获取照片路径
-		PATH = UpLoadPicture.upload(Photo, START);
+		PATH = UpLoadPicture.upload(Photo, PhotoFileName, START);
 		
 		String sql = "";
 		sql += "update MonitoringSite set Institution='" + Institution + "',Investigator='" + Investigator + "',InvestigationDate='" + InvestigationDate + "',Site='";
@@ -99,9 +110,9 @@ public class Op_MonitoringSite extends ActionSupport {
 	
 	private void insert(){
 		//获取照片路径
-		PATH = UpLoadPicture.upload(Photo, START); 
+		PATH = UpLoadPicture.upload(Photo, PhotoFileName, START);
 		
-		String insert = "insert into MonitoringSite values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+		String insert = "insert into MonitoringSite values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 		String childID = START + TimeFormat.getNowTime();
 		
 		PreparedStatement preparedStatement = null;
@@ -128,6 +139,7 @@ public class Op_MonitoringSite extends ActionSupport {
 			preparedStatement.setString(13, EndLatitude);
 			preparedStatement.setString(14, Weather);
 			preparedStatement.setString(15, Temperature);
+			preparedStatement.setString(16, account.getID());
 			
 			preparedStatement.executeUpdate();
 			
@@ -269,12 +281,28 @@ public class Op_MonitoringSite extends ActionSupport {
 		this.flag = flag;
 	}
 
-	public String getPhoto() {
+	public List<File> getPhoto() {
 		return Photo;
 	}
 
-	public void setPhoto(String photo) {
+	public void setPhoto(List<File> photo) {
 		Photo = photo;
 	}
-	
+
+	public List<String> getPhotoFileName() {
+		return PhotoFileName;
+	}
+
+	public void setPhotoFileName(List<String> photoFileName) {
+		PhotoFileName = photoFileName;
+	}
+
+	public List<String> getPhotoContentType() {
+		return PhotoContentType;
+	}
+
+	public void setPhotoContentType(List<String> photoContentType) {
+		PhotoContentType = photoContentType;
+	}
+
 }

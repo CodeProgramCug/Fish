@@ -1,9 +1,11 @@
 package tree_util;
 
+import java.io.File;
 import java.io.PrintWriter;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.List;
 
 import org.apache.commons.collections.Predicate;
 import org.apache.struts2.ServletActionContext;
@@ -25,12 +27,15 @@ public class Op_Catches extends ActionSupport {
 	private static String PATH = "";					//照片在服务器上的路径("|"隔开)
 	
 	private String SampleID;
-	private String Photo;
 	private String Name;
 	private String TotalQuality;
 	private String EggQuality;
 	private String FryQuality;
-	private String ID_WaterLayer;			//外键
+	private String ID_WaterLayer;				//外键
+	
+	private List<File> Photo;					//文件引用
+	private List<String> PhotoFileName;			//文件名字
+	private List<String> PhotoContentType;		//文件类型
 	
 	private PrintWriter writer = null;
 	
@@ -55,7 +60,7 @@ public class Op_Catches extends ActionSupport {
 	
 	private void update(){
 		//获取照片路径
-		PATH = UpLoadPicture.upload(Photo, START);
+		PATH = UpLoadPicture.upload(Photo, PhotoFileName, START);
 		
 		String update = "update Catches set Name='" + Name + "',Photo='"
 				+ PATH + "',TotalQuality='" + TotalQuality + "',EggQuality='"
@@ -92,7 +97,7 @@ public class Op_Catches extends ActionSupport {
 	private void insert(){
 		
 		//获取照片路径
-		PATH = UpLoadPicture.upload(Photo, START);
+		PATH = UpLoadPicture.upload(Photo, PhotoFileName, START);
 		
 		String insert = "insert into Catches values(?,?,?,?,?,?,?)";
 		String childID = START + TimeFormat.getNowTime();
@@ -174,12 +179,28 @@ public class Op_Catches extends ActionSupport {
 		SampleID = sampleID;
 	}
 
-	public String getPhoto() {
+	public List<File> getPhoto() {
 		return Photo;
 	}
 
-	public void setPhoto(String photo) {
+	public void setPhoto(List<File> photo) {
 		Photo = photo;
 	}
-	
+
+	public List<String> getPhotoFileName() {
+		return PhotoFileName;
+	}
+
+	public void setPhotoFileName(List<String> photoFileName) {
+		PhotoFileName = photoFileName;
+	}
+
+	public List<String> getPhotoContentType() {
+		return PhotoContentType;
+	}
+
+	public void setPhotoContentType(List<String> photoContentType) {
+		PhotoContentType = photoContentType;
+	}
+
 }

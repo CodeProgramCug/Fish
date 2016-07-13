@@ -1,9 +1,11 @@
 package tree_util;
 
+import java.io.File;
 import java.io.PrintWriter;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.List;
 
 import org.apache.struts2.ServletActionContext;
 
@@ -24,12 +26,15 @@ public class Op_Fishes extends ActionSupport {
 	private static String PATH = "";					//照片在服务器上的路径("|"隔开)
 	
 	private String SampleID;
-	private String Photo;
 	private String BodyLength;
 	private String Length;
 	private String BodyWeight;
 	private String Age;
 	private String ID_Catches;			//外键
+	
+	private List<File> Photo;					//文件引用
+	private List<String> PhotoFileName;			//文件名字
+	private List<String> PhotoContentType;		//文件类型
 	
 	private PrintWriter writer = null;
 	
@@ -53,9 +58,8 @@ public class Op_Fishes extends ActionSupport {
 	}
 	
 	private void update(){
-		System.out.println("@@@@@@@@进入");
 		//获取照片路径
-		PATH = UpLoadPicture.upload(Photo, START);  
+		PATH = UpLoadPicture.upload(Photo, PhotoFileName, START); 
 		
 		String update = "update Fishes set Photo='" + PATH + "',BodyLength='"
 				+ BodyLength + "',Length='" + Length + "',BodyWeight='" + BodyWeight
@@ -90,7 +94,7 @@ public class Op_Fishes extends ActionSupport {
 	
 	private void insert(){
 		//获取照片路径
-		PATH = UpLoadPicture.upload(Photo, START); 
+		PATH = UpLoadPicture.upload(Photo, PhotoFileName, START);
 		
 		String insert = "insert into Fishes values(?,?,?,?,?,?,?)";
 		String childID = START + TimeFormat.getNowTime();
@@ -126,12 +130,28 @@ public class Op_Fishes extends ActionSupport {
 		
 	}
 
-	public String getPhoto() {
-		return Photo;
+	public List<String> getPhotoFileName() {
+		return PhotoFileName;
 	}
 
-	public void setPhoto(String photo) {
+	public void setPhotoFileName(List<String> photoFileName) {
+		PhotoFileName = photoFileName;
+	}
+
+	public List<String> getPhotoContentType() {
+		return PhotoContentType;
+	}
+
+	public void setPhotoContentType(List<String> photoContentType) {
+		PhotoContentType = photoContentType;
+	}
+
+	public void setPhoto(List<File> photo) {
 		Photo = photo;
+	}
+
+	public List<File> getPhoto() {
+		return Photo;
 	}
 
 	public String getBodyLength() {

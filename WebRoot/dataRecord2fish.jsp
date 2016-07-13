@@ -56,7 +56,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 					<span>NorthLa:&nbsp</span><br>
 				</div>
 				<div class="float-left" >
-					<font style="color:blue"><%=((User)session.getAttribute("user")).getUsername() %></font><br>
+					<font style="color:blue"><%=((Account)session.getAttribute("account")).getUsername() %></font><br>
 					<input type="text" name="PhyName"><font>&nbsp*</font></input><br>
 					<input type="text" name="SectRive"><font>&nbsp*</font></input><br>
 					<input type="text" name="MonitSiteName"><font>&nbsp*</font></input><br>
@@ -118,7 +118,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 					<span>NorthLa:&nbsp</span><br>
 				</div>
 				<div class="float-left">
-					<font style="color:blue"><%=((User)session.getAttribute("user")).getUsername() %></font><br>
+					<font style="color:blue"><%=((Account)session.getAttribute("account")).getUsername() %></font><br>
 					<input type="text" name="ZooplanName"><font>&nbsp*</font></input><br>
 					<input type="text" name="SectRive"><font>&nbsp*</font></input><br>
 					<input type="text" name="MonitSiteName"><font>&nbsp*</font></input><br>
@@ -179,7 +179,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 					<span>MonitSiteName:&nbsp</span><br>
 				</div>
 				<div class="float-left">
-					<font style="color:blue"><%=((User)session.getAttribute("user")).getUsername() %></font><br>
+					<font style="color:blue"><%=((Account)session.getAttribute("account")).getUsername() %></font><br>
 					<input type="text" name="BenName"><font>&nbsp*</font></input><br>
 					<input type="text" name="SectRive"><font>&nbsp*</font></input><br>
 					<input type="text" name="EastLo"><font>&nbsp*</font></input><br>

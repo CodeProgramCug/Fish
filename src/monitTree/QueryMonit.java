@@ -8,6 +8,9 @@ import java.sql.Statement;
 
 import org.apache.struts2.ServletActionContext;
 
+import tree_util.Account;
+
+import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
 
 import db_tool.DBConnection;
@@ -16,11 +19,15 @@ import db_tool.DbBean;
 public class QueryMonit extends ActionSupport {
 	private String monitID;
 	
+	private Account account = null;
+	
 	//获取所有的监测点
 	public String MonitSite() throws IOException{
 		PrintWriter writer = ServletActionContext.getResponse().getWriter();
+		//获取session中保存的用户信息
+		account = (Account) ActionContext.getContext().getSession().get("account");
 		
-		String sql = "SELECT InverstigationID FROM MonitoringSite";
+		String sql = "SELECT InverstigationID FROM MonitoringSite where user_id='" + account.getID() + "'";
 		
 		String result="";
 		

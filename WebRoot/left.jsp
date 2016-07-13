@@ -1,4 +1,5 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
+<%@page import="tree_util.Account"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" import="java.util.*"
 	pageEncoding="UTF-8"%>
 <script type="text/javascript"src="js/jquery-1.12.3.min.js"></script>
 <script type="text/javascript"src="js/jstree.min.js"></script>
@@ -60,9 +61,14 @@ $(document).ready(function(){
 				</div>
 					<ul>
 						<li><a href=""><span class="icon-item"></span>用户信息</a></li>
-						<%if(  ((Set<String>)session.getAttribute("roleRight")).contains("User_manege")   ){ %>
-						<li><a href="userManager.jsp"><span class="icon-item"></span>用户管理</a></li>
-						<%}%>
+						<%
+					
+		                Account account = (Account) session.getAttribute("account");
+		                String role = account.getRoleName();			//角色
+						if(!role.equals("student")){
+				       out.println("<li><a href=\"userManager.jsp\"><span class=\"icon-item\"></span>用户管理</a></li>");
+						//<li><a href="userManager.jsp"><span class="icon-item"></span>用户管理</a></li>
+						}%>
 					</ul>
 				</li>
 				<hr>
@@ -72,9 +78,12 @@ $(document).ready(function(){
 				</div>
 					<ul>
 					<li><a href=""><span class="icon-item"></span>系统管理</a></li>
-					<%if(  ((Set<String>)session.getAttribute("roleRight")).contains("Sys_manege" )){ %> 
-						<li><a href=""><span class="icon-item"></span>系统管理</a></li>
-					<%}%>
+					<%
+					 Account account2 = (Account) session.getAttribute("account");
+		             String role2 = account.getRoleName();	
+					if(!role2.equals("student")){ 
+					     out.println("<li><a href=\"\"><span class=\"icon-item\"></span>系统管理</a></li>");
+					}%>
 					
 					</ul>
 				</li>

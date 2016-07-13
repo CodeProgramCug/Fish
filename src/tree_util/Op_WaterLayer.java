@@ -8,6 +8,7 @@ import java.sql.Statement;
 
 import org.apache.struts2.ServletActionContext;
 
+import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
 
 import db_tool.DBConnection;
@@ -34,6 +35,8 @@ public class Op_WaterLayer extends ActionSupport {
 	private PrintWriter writer = null;
 	
 	private DBConnection db_connection = null;
+	
+	private Account account = null;
 	
 	@Override
 	public String execute() throws Exception {
@@ -129,11 +132,14 @@ public class Op_WaterLayer extends ActionSupport {
 	
 	//获取所有的采样水层
 	public String allWaterLayer(){
-		String query = "select ID from WaterLayer";
+		//获取session中保存的用户信息
+		account = (Account) ActionContext.getContext().getSession().get("account");
+		
 		String result = "";
 		
 		Statement statement = null;
 		ResultSet resultSet = null;
+		
 		try {
 			statement = db_connection.getStatement();
 		} catch (SQLException e) {
@@ -142,13 +148,42 @@ public class Op_WaterLayer extends ActionSupport {
 			e.printStackTrace();
 		}
 		
+		//从监测点一级一级通过外键定位到采样水层
+		String query_Site = "select InverstigationID from MonitoringSite where user_id='" + account.getID() + "'";
+		ResultSet res2 = null;
+		ResultSet res3 = null;
+		ResultSet res4 = null;
+		ResultSet res5 = null;
+		
 		try {
-			resultSet = statement.executeQuery(query);
-			while(resultSet.next()){
-				result += resultSet.getString(1) + ",";
+			resultSet = statement.executeQuery(query_Site);
+			while (resultSet.next()) {
+				//断面
+				String query_Suf = "select ID from FractureSurface where ID_MonitoringSite='" + resultSet.getString(1) + "'";
+				res2 = statement.executeQuery(query_Suf);
+				while (res2.next()) {
+					//测线
+					String query_Lin= "select ID from MeasuringLine where ID_FractureSurface='" + res2.getString(1) + "'";
+					res3 = statement.executeQuery(query_Lin);
+					while (res3.next()) {
+						//测点
+						String query_Poi = "select ID from MeasuringPoint where ID_MeasuringLine='" + res3.getString(1) + "'";
+						res4 = statement.executeQuery(query_Poi);
+						while (res4.next()) {
+							//采样水层
+							String query_Sur = "select ID from WaterLayer where ID_MeasuringPoint='" + res4.getString(1) + "'";
+							res5 = statement.executeQuery(query_Sur);
+							while (res5.next()) {
+								result += res5.getString(1) + ",";
+							}
+						}
+					}
+				}
 			}
+			
 			result = result.substring(0, result.length()-1);
 			
+			System.out.println("采样水层*****--" + result);
 			if(result.equals("")){
 				writer.write("no");
 			}else{
@@ -160,6 +195,17 @@ public class Op_WaterLayer extends ActionSupport {
 			System.out.println("所有的采样水层查询错误");
 			writer.write("error");
 			e.printStackTrace();
+		}finally{
+			try {
+				db_connection.close(res5,null);
+				db_connection.close(res4,null);
+				db_connection.close(res3,null);
+				db_connection.close(res2,null);
+				db_connection.close(resultSet,statement);
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		
 		return null;

@@ -4,11 +4,13 @@
 <constant name="struts.enable.DynamicMethodInvocation" value="false" />
 <constant name="struts.multipart.saveDir" value="/tmp"/>
 	<package name="a" extends="struts-default">
-		<action name="check" class="controller.CheckLogin"></action>
+		<!-- 重新实现，整合时删除 -->
+		<!-- <action name="check" class="controller.CheckLogin"></action>-->
 		
-		<action name="login" class="controller.UserLogin" method="login">
+		<!-- 重新实现，整合时删除 -->
+		<!--  <action name="login" class="controller.UserLogin" method="login">
 			<result name="success">/tree.jsp</result>
-		</action>
+		</action>-->
 		
 		<action name="fishDataRecord" class="fishDataInput.FishRecord">
 			<result name="success">/dataRecord2fish.jsp</result>
@@ -92,5 +94,23 @@
 		<!-- 卵样本 -->
 		<action name="op_egg" class="tree_util.Op_FishEggs"></action>
 		
+		<!-- 检测账户，密码正确性 -->
+		<action name="check" class="tree_util.Check"></action>
+		
+		<!-- 登录 -->
+		<action name="login" class="tree_util.Login">
+			<result name="success">/tree.jsp</result>
+			<result name="error">/login.jsp</result>
+		</action>
+		
 	</package>
+	<!-- 康宇小组用户树操作-->
+	<package name="db_tool" extends="struts-default">
+		<action name="UserDataQuery" class="db_tool.UserQuery" method="getData"></action>
+		<action name="userQuery" class="db_tool.UserQuery" method="userQuery"></action>
+		<action name="deleteQuery" class="db_tool.UserQuery" method="deleteQuery"></action>
+		<action name="newQuery" class="db_tool.NewUser" method="newQuery"></action>
+		<action name="updateQuery" class="db_tool.NewUser" method="updateQuery"></action>
+	</package>
+	
 </struts>    
